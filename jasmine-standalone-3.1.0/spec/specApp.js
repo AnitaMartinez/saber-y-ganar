@@ -17,8 +17,9 @@
 *      Si fallo antes de 10 segundos (inclusive) - resto 1 punto
 *          (1 punto, incorrecta, 3 segundos)  -> 0 puntos
            (10 punto, incorrecta, 10 segundos)  -> 9 puntos
-*      No se puede pasar sin responder
 *      Si en 20 segundos no has respondido , pasa a siguiente pregunta y pierdes 3 punto
+           (3 puntos, noContesta, 21) -> 0 puntos
+*      No se puede pasar sin responder
 *
 *
 * */
@@ -58,5 +59,8 @@ describe('calculo de marcador', function () {
     it("resta punto si fallo lento", function () {
         expect(recalcularMarcador(1, false, 3)).toBe(0);
         expect(recalcularMarcador(10, false, 10)).toBe(9);
+    });
+    it("resta puntos si no contesto en mucho tiempo", function () {
+        expect(recalcularMarcador(3, false, 21)).toBe(0);
     });
 });
