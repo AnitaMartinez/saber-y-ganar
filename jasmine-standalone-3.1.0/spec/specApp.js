@@ -8,6 +8,8 @@
 *      Si acierto pregunta entre 2 y 10 segundos - sumo 1 punto
 *          (1 punto, correcta, 5 segundos) -> 2 puntos
 *      Si fallo pregunta en mas de 10 segundos - resto 2 puntos
+           (2 puntos, incorrecta, 11 segundos) -> 0
+           (0 puntos, incorrecta, 11 segundos) -> -2
 *      Si acierto y tardo mas de 10 segundos - 0 puntos
 *      Si fallo antes de 10 segundos - resto 1 punto
 *      No se puede pasar sin responder
@@ -31,5 +33,9 @@ describe('calculo de marcador', function () {
     });
     it("suma punto si acierta rápido", function () {
         expect(recalcularMarcador(1, true, 5)).toBe(2);
+
+    });
+    it("resta más puntos si fallo muy lento", function () {
+        expect(recalcularMarcador(2, false, 11)).toBe(0);
     });
 });
