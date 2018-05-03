@@ -33,9 +33,11 @@ describe('calculo de marcador', function () {
         } else if (esCorrecta && (tiempo > 10)) {
             return puntos;
         }
-        if (!esCorrecta && (tiempo > 10)) {
+        if (!esCorrecta && (tiempo > 20)) {
+            return puntos - 3;
+        } else if (!esCorrecta && (tiempo > 10)) {
             return puntos - 2;
-        } else if (!esCorrecta && (tiempo <= 10)) {
+        } else if (!esCorrecta && (tiempo <= 20)) {
             return puntos - 1;
         }
     }
