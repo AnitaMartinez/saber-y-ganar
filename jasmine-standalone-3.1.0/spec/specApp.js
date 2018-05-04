@@ -74,33 +74,51 @@ describe('calculo de marcador', function () {
     });
 });
 
+/* TO DO - list
+*
+*      Reconoce si una respuesta es correcta
+*          (pregunta, respuesta correcta, ) -> True
+*      Reconoce una respuesta incorrecta
+*          (pregunta, respuesta incorrecta ) -> False
+*      Detecta cuando la respuesta no pertenece a la pregunta
+           (pregunta, respuesta correcta, ) -> True
+           (pregunta, respuesta incorrecta ) -> True
+           (pregunta, respuesta que no pertenece a la pregunta, ) -> False
+* */
+
 
 describe("comprobador de respuestas", function () {
     const questionWithAnswers = {
         id: 1,
         question: "¿Cuál es la capital de Portugal?",
         answers: [
-            { id: 1, answer: "Faro", isCorrect: false },
-            { id: 2, answer: "Oporto", isCorrect: false },
-            { id: 3, answer: "Lisboa", isCorrect: true }
+            { id: 1, answer: "Faro", isCorrect: false, idQuestion: 1 },
+            { id: 2, answer: "Oporto", isCorrect: false, idQuestion: 1 },
+            { id: 3, answer: "Lisboa", isCorrect: true, idQuestion: 1 }
         ]
     };
 
-    const exampleResponseCorrect = { id: 3, answer: "Lisboa", isCorrect: true };
-    const exampleResponseIncorrect = { id: 2, answer: "Oporto" };
+    const exampleResponseCorrect = questionWithAnswers.answers[2];
+    const exampleResponseIncorrect = questionWithAnswers.answers[1];
+    const exampleResponseOfOtherQuestion = { id: 1, answer: "adfad", isCorrect: false, idQuestion: 2 };
 
     function isCorrect(question, userAnswer) {
-        if (userAnswer.isCorrect) {
-            return true;
-        } else {
-            return false;
-        }
+        return userAnswer.isCorrect;
+    }
+
+    function isMemberOfQuestion(question, userAnswer) {
+        return question.id === userAnswer.idQuestion;
     }
 
     it("reconoce una respuesta correcta", function () {
-        expect(isCorrect(questionWithAnswers, exampleResponseCorrect)).toBe(true);
+        expect(isCorrect(questionWithAnswers, exampleResponseCorrect)).toBeTruthy();
     });
     it("reconoce una respuesta incorrecta", function () {
-        expect(isCorrect(questionWithAnswers, exampleResponseIncorrect)).toBe(false);
-    })
-})
+        expect(isCorrect(questionWithAnswers, exampleResponseIncorrect)).toBeFalsy();
+    });
+    it("detecta cuando la respuesta no pertenece a su pregunta", function () {
+        expect(isMemberOfQuestion(questionWithAnswers, exampleResponseCorrect)).toBeTruthy();
+        expect(isMemberOfQuestion(questionWithAnswers, exampleResponseIncorrect)).toBeTruthy();
+        expect(isMemberOfQuestion(questionWithAnswers, exampleResponseOfOtherQuestion)).toBeFalsy();
+    });
+});
