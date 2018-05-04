@@ -26,9 +26,6 @@
 * */
 
 describe('calculo de marcador', function () {
-
-    //Mejor hacer dos funciones para evitar pasar parámetros boolean
-
     function recalcularMarcadorEsCorreta(puntos, tiempo) {
         switch (true) {
             case tiempo <= 2: return puntos + 2;
@@ -37,7 +34,6 @@ describe('calculo de marcador', function () {
             default: ;
         }
     }
-
     function recalcularMarcadorEsIncorrecta(puntos, tiempo) {
         switch (true) {
             case tiempo > 20: return puntos - 3;
@@ -46,12 +42,9 @@ describe('calculo de marcador', function () {
             default: ;
         }
     }
-
     function recalcularMarcadorSinRespuesta(puntos) {
         return puntos - 3;
     }
-
-
 
     it("suma más puntos si acierta muy rápido", function () {
         expect(recalcularMarcadorEsCorreta(0, 1)).toBe(2);
@@ -80,3 +73,34 @@ describe('calculo de marcador', function () {
         expect(recalcularMarcadorSinRespuesta(3)).toBe(0);
     });
 });
+
+
+describe("comprobador de respuestas", function () {
+    const questionWithAnswers = {
+        id: 1,
+        question: "¿Cuál es la capital de Portugal?",
+        answers: [
+            { id: 1, answer: "Faro", isCorrect: false },
+            { id: 2, answer: "Oporto", isCorrect: false },
+            { id: 3, answer: "Lisboa", isCorrect: true }
+        ]
+    };
+
+    const exampleResponseCorrect = { id: 3, answer: "Lisboa", isCorrect: true };
+    const exampleResponseIncorrect = { id: 2, answer: "Oporto" };
+
+    function isCorrect(question, userAnswer) {
+        if (userAnswer.isCorrect) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    it("reconoce una respuesta correcta", function () {
+        expect(isCorrect(questionWithAnswers, exampleResponseCorrect)).toBe(true);
+    });
+    it("reconoce una respuesta incorrecta", function () {
+        expect(isCorrect(questionWithAnswers, exampleResponseIncorrect)).toBe(false);
+    })
+})
