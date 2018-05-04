@@ -26,19 +26,14 @@
 
 describe('calculo de marcador', function () {
     function recalcularMarcador(puntos, esCorrecta, tiempo) {
-        if (esCorrecta && (tiempo <= 2)) {
-            return puntos + 2;
-        } else if (esCorrecta && (tiempo <= 10)) {
-            return puntos + 1;
-        } else if (esCorrecta && (tiempo > 10)) {
-            return puntos;
-        }
-        if (!esCorrecta && (tiempo > 20)) {
-            return puntos - 3;
-        } else if (!esCorrecta && (tiempo > 10)) {
-            return puntos - 2;
-        } else if (!esCorrecta && (tiempo <= 20)) {
-            return puntos - 1;
+        switch (true) {
+            case esCorrecta && (tiempo <= 2): return puntos + 2;
+            case esCorrecta && (tiempo <= 10): return puntos + 1;
+            case esCorrecta && (tiempo > 10): return puntos;
+            case !esCorrecta && (tiempo > 20): return puntos - 3;
+            case !esCorrecta && (tiempo > 10): return puntos - 2;
+            case !esCorrecta && (tiempo <= 20): return puntos - 1;
+            default: ;
         }
     }
 
