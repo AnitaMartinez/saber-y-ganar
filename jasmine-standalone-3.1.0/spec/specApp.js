@@ -27,7 +27,10 @@ describe('winner"s calculation', function () {
   ]
 
   const calculateWinner = () => {
-  
+    const winner = players.sort(( onePlayer, otherPlayer) => {
+      return onePlayer.points > otherPlayer.points ? -1 : 1;
+    })
+    return winner[0].name;
   }
 
   it("checks that the winning user is the one with most points", function () {
