@@ -5,10 +5,9 @@
 *     Detecta al usuario con más puntos
 *         (Laura 33 puntos, Elisa 5, Jose 20) -> Laura gana
 *     Detecta cuando los usuarios con más puntos han empatado
-*         (Laura 33 puntos, Elisa 33, Jose 20) -> Elisa y Jose ganan
+*         (Laura 33 puntos, Elisa 33, Jose 20) -> Elisa y Laura ganan
 *
 * */
-
 
 describe('winner"s calculation', function () {
 
