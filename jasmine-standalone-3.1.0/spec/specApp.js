@@ -11,30 +11,49 @@
 
 
 describe('winner"s calculation', function () {
-  const players = [
-    {
-      name: "Laura",
-      points: 33
-    },
-    {
-      name: "Elisa",
-      points: 5
-    },
-    {
-      name: "Jose",
-      points: 20
-    }
-  ]
+
+let players;
+
+  beforeEach(function() {
+    players = [
+      {
+        name: "Laura",
+        points: 33
+      },
+      {
+        name: "Elisa",
+        points: 5
+      },
+      {
+        name: "Jose",
+        points: 20
+      }
+    ]
+ });
 
   const calculateWinner = () => {
-    const winner = players.sort(( onePlayer, otherPlayer) => {
-      return onePlayer.points > otherPlayer.points ? -1 : 1;
-    })
-    return winner[0].name;
+    let winners = [];
+    let points = 0;
+    for (const player of players) {
+      if (player.points > points) {
+        points = player.points;
+        winners = [];
+        winners.push(player);
+      }
+      else if (player.points === points) {
+        winners.push(player);
+      }
+    }
+    return winners;
   }
 
   it("checks that the winning user is the one with most points", function () {
-    expect(calculateWinner(players)).toBe("Laura");
+    expect(calculateWinner(players)).toEqual([{name: "Laura", points: 33}]);
+    expect(calculateWinner(players)).not.toBe([{name: "Laura", points: 33}]);
+  });
+  it("detects a tie", function () {
+    players[1].points = 33;
+    expect(calculateWinner(players)).toEqual([{name: "Laura", points: 33}, {name: "Elisa", points: 33}]);
   });
 })
 
