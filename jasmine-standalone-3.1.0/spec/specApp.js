@@ -1,5 +1,45 @@
 /* TO DO - list
 *
+*   Calcular ganador
+*
+*     Detecta al usuario con más puntos
+*         (Laura 33 puntos, Elisa 5, Jose 20) -> Laura gana
+*     Detecta cuando los usuarios con más puntos han empatado
+*         (Laura 33 puntos, Elisa 33, Jose 20) -> Elisa y Jose ganan
+*
+* */
+
+
+describe('winner"s calculation', function () {
+  const players = [
+    {
+      name: "Laura",
+      points: 33
+    },
+    {
+      name: "Elisa",
+      points: 5
+    },
+    {
+      name: "Jose",
+      points: 20
+    }
+  ]
+
+  const calculateWinner = () => {
+  
+  }
+
+  it("checks that the winning user is the one with most points", function () {
+    expect(calculateWinner(players)).toBe("Laura");
+  });
+})
+
+
+
+
+/* TO DO - list
+*
 *   velocidad de respuesta, acierto o fallo,
 *
 *      Si acierto pregunta en menos de 2 segundos (inclusive) - sumo 2 puntos
@@ -24,6 +64,7 @@
 *
 *
 * */
+
 
 describe('calculo de marcador', function () {
     function recalcularMarcadorEsCorreta(puntos, tiempo) {
