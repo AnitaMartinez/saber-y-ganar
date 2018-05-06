@@ -55,9 +55,7 @@ let players;
     players[1].points = 33;
     expect(calculateWinner(players)).toEqual([{name: "Laura", points: 33}, {name: "Elisa", points: 33}]);
   });
-})
-
-
+});
 
 
 /* TO DO - list
