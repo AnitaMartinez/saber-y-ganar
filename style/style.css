@@ -51,3 +51,10 @@ button:focus, input:focus {
   padding-left: 40px;
   padding-top: 40px;
 }
+
+/* questions */
+
+.answers-content {
+  display: flex;
+  flex-direction: column;
+}

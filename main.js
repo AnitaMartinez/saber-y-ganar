@@ -34,35 +34,38 @@
         callback(serverData);
     }
 
-    const paintQuestions = questionsWithAnswers => {
+    const throwQuestions = questionsWithAnswers => {
         const questionsList = document.getElementById("questions-list");
-        const titleQuestion = document.getElementById("title-question");
         const buttonSendQuestion = document.getElementById("button-send-question");
+        let titleQuestion;
+        let answersInputs = "";
 
-        var i = 0;
-        function paintQuestions() {
+        let i = 0;
+        function paintNextQuestion() {
             if (i < questionsWithAnswers.length) {
-                const titleQuestion = document.getElementById("title-question");
-                questionsList.innerHTML = `<h5>${questionsWithAnswers[i].question}</h5>`
+                titleQuestion = `<h5> ${questionsWithAnswers[i].question} </h5>`;
 
                 for (const answers of questionsWithAnswers[i].answers) {
-                    questionsList.innerHTML += (
-                        `<input type="radio" id=${answers.answerDescription} name="answer" value="answer">
-                        <label for=${answers.answerDescription}>${answers.answerDescription}</label>`
+                    answersInputs += (
+                        `<div>
+                        <input type="radio" id=${answers.answerDescription} name="answer" value="answer">
+                        <label for=${answers.answerDescription}>${answers.answerDescription}</label>
+                        </div>`
                     );
                 }
-
+                questionsList.innerHTML = titleQuestion + "<div class='answers-content'>" + answersInputs + "</div>";
                 i++;
+                answersInputs = "";
             }
         }
-        buttonSendQuestion.addEventListener("click", paintQuestions);
+        buttonSendQuestion.addEventListener("click", paintNextQuestion);
     }
 
     //Get the data
     let questionsWithAnswers = [];
     getQuestions(function (data) {
         questionsWithAnswers = data;
-        paintQuestions(questionsWithAnswers);
+        throwQuestions(questionsWithAnswers);
     });
 
 }());
