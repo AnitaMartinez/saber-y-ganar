@@ -146,6 +146,43 @@ describe('calculo de marcador', function () {
            (pregunta, respuesta que no pertenece a la pregunta, ) -> False
 * */
 
+describe ("array preguntas", function () {
+    const questionWithAnswers =  [{
+        id: 1,
+        question: "¿Cuál es la capital de Portugal?",
+        answers: [
+            { id: 1, answer: "Faro", isCorrect: false, idQuestion: 1 },
+            { id: 2, answer: "Oporto", isCorrect: false, idQuestion: 1 },
+            { id: 3, answer: "Lisboa", isCorrect: true, idQuestion: 1 }
+        ]
+    },
+    {
+        id: 2,
+        question: "¿Cuál es la capital de Egipto?",
+        answers: [
+            { id: 1, answer: "Faro", isCorrect: false, idQuestion: 2 },
+            { id: 2, answer: "El Cairo", isCorrect: true, idQuestion: 2 },
+            { id: 3, answer: "Lisboa", isCorrect: false, idQuestion: 2 }
+        ]
+    },
+    {
+        id: 3,
+        question: "¿Cuál es la capital de España?",
+        answers: [
+            { id: 1, answer: "Madrid", isCorrect: true, idQuestion: 3 },
+            { id: 2, answer: "Oporto", isCorrect: false, idQuestion: 3 },
+            { id: 3, answer: "Lisboa", isCorrect: false, idQuestion: 3 }
+        ]
+    }
+  ]
+     for ( let i = 0; i < questionWithAnswers.length; i++ ){
+         console.log(questionWithAnswers[i].question)
+
+         for (let x = 0; x < questionWithAnswers[i].answers.length; x++)
+         console.log(questionWithAnswers[i].answers[x].answer)
+     }
+
+})
 
 describe("comprobador de respuestas", function () {
     const questionWithAnswers = {
@@ -169,6 +206,8 @@ describe("comprobador de respuestas", function () {
     function isMemberOfQuestion(question, userAnswer) {
         return question.id === userAnswer.idQuestion;
     }
+
+    // function showQuestion ()
 
     it("reconoce una respuesta correcta", function () {
         expect(isCorrect(questionWithAnswers, exampleResponseCorrect)).toBeTruthy();
