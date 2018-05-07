@@ -173,8 +173,35 @@ describe("array preguntas", function () {
             { id: 2, answer: "Oporto", isCorrect: false, idQuestion: 3 },
             { id: 3, answer: "Lisboa", isCorrect: false, idQuestion: 3 }
         ]
+    },
+    {
+        id: 4,
+        question: "¿Cuál es la capital de Zambia?",
+        answers: [
+            { id: 1, answer: "Lusaka", isCorrect: true, idQuestion: 4 },
+            { id: 2, answer: "Oporto", isCorrect: false, idQuestion: 4 },
+            { id: 3, answer: "Lisboa", isCorrect: false, idQuestion: 4 }
+        ]
+    },
+    {
+        id: 5,
+        question: "¿Cuál es la capital de Jordania?",
+        answers: [
+            { id: 1, answer: "Madrid", isCorrect: false, idQuestion: 5 },
+            { id: 2, answer: "Amán", isCorrect: true, idQuestion: 5 },
+            { id: 3, answer: "Lisboa", isCorrect: false, idQuestion: 5 }
+        ]
+    },
+    {
+        id: 6,
+        question: "¿Cuál es la capital de Panama?",
+        answers: [
+            { id: 1, answer: "Madrid", isCorrect: false, idQuestion: 6 },
+            { id: 2, answer: "Oporto", isCorrect: false, idQuestion: 6 },
+            { id: 3, answer: "Ciudad de Panamá", isCorrect: true, idQuestion: 6 }
+        ]
     }
-    ];
+    ]
 
 
     function dosetTimeout(i) {
