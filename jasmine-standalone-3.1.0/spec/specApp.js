@@ -151,27 +151,27 @@ describe("array preguntas", function () {
         id: 1,
         question: "¿Cuál es la capital de Portugal?",
         answers: [
-            { id: 1, answer: "Faro", isCorrect: false, idQuestion: 1 },
-            { id: 2, answer: "Oporto", isCorrect: false, idQuestion: 1 },
-            { id: 3, answer: "Lisboa", isCorrect: true, idQuestion: 1 }
+            { id: 1, answerDescritpion: "Faro", isCorrect: false, idQuestion: 1 },
+            { id: 2, answerDescritpion: "Oporto", isCorrect: false, idQuestion: 1 },
+            { id: 3, answerDescritpion: "Lisboa", isCorrect: true, idQuestion: 1 }
         ]
     },
     {
         id: 2,
         question: "¿Cuál es la capital de Egipto?",
         answers: [
-            { id: 1, answer: "Faro", isCorrect: false, idQuestion: 2 },
-            { id: 2, answer: "El Cairo", isCorrect: true, idQuestion: 2 },
-            { id: 3, answer: "Lisboa", isCorrect: false, idQuestion: 2 }
+            { id: 1, answerDescritpion: "Faro", isCorrect: false, idQuestion: 2 },
+            { id: 2, answerDescritpion: "El Cairo", isCorrect: true, idQuestion: 2 },
+            { id: 3, answerDescritpion: "Lisboa", isCorrect: false, idQuestion: 2 }
         ]
     },
     {
         id: 3,
         question: "¿Cuál es la capital de España?",
         answers: [
-            { id: 1, answer: "Madrid", isCorrect: true, idQuestion: 3 },
-            { id: 2, answer: "Oporto", isCorrect: false, idQuestion: 3 },
-            { id: 3, answer: "Lisboa", isCorrect: false, idQuestion: 3 }
+            { id: 1, answerDescritpion: "Madrid", isCorrect: true, idQuestion: 3 },
+            { id: 2, answerDescritpion: "Oporto", isCorrect: false, idQuestion: 3 },
+            { id: 3, answerDescritpion: "Lisboa", isCorrect: false, idQuestion: 3 }
         ]
     }
     ];
@@ -181,7 +181,7 @@ describe("array preguntas", function () {
         setTimeout(function () {
             console.log(questionsWithAnswers[i].question);
             for (const answer of questionsWithAnswers[i].answers) {
-                console.log(answer.answer);
+                console.log(answer.answerDescritpion);
             }
         }, i * 1000);
     }
@@ -189,6 +189,22 @@ describe("array preguntas", function () {
     for (let i = 0; i < questionsWithAnswers.length; i++) {
         dosetTimeout(i);
     }
+
+    // function lanzaPregunta(){
+    //     var i = 0;
+    //     setInterval(function(){
+    //         if(i < questions.length){
+    //             console.log(questions[i].question);
+    //             for(let x = 0; x < questions[i].answer.length; x++){
+    //               console.log(questions[i].answer[x].value);
+    //             }
+    //             i++;
+    //         }
+    //     }, 1000);
+    //  }
+    //  lanzaPregunta();
+
+    //Habría que guardar el identificador del setinterval y luego pararlo, para que no esté corriendo todo el rato
 
 });
 
@@ -214,8 +230,6 @@ describe("comprobador de respuestas", function () {
     function isMemberOfQuestion(question, userAnswer) {
         return question.id === userAnswer.idQuestion;
     }
-
-    // function showQuestion ()
 
     it("reconoce una respuesta correcta", function () {
         expect(isCorrect(questionWithAnswers, exampleResponseCorrect)).toBeTruthy();
