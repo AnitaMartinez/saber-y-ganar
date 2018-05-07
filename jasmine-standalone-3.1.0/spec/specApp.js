@@ -232,7 +232,7 @@ describe("array preguntas", function () {
     //  lanzaPregunta();
 
     //Habría que guardar el identificador del setinterval y luego pararlo, para que no esté corriendo todo el rato
-
+    // https://developer.mozilla.org/es/docs/Web/API/WindowTimers/setInterval
 });
 
 describe("comprobador de respuestas", function () {

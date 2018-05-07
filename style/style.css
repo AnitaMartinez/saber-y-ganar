@@ -1,0 +1,24 @@
+
+/* General */
+
+body {
+    margin: 0;
+  box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+  }
+  
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  li {
+    list-style-type: none;
+  }
+  
+  button:focus, input:focus {
+    outline: none;
+  }
