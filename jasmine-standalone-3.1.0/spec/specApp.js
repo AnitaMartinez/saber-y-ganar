@@ -174,44 +174,23 @@ describe("array preguntas", function () {
             { id: 3, answer: "Lisboa", isCorrect: false, idQuestion: 3 }
         ]
     }
-    ]
+    ];
 
-    // for (const questionwithAnswers of questionsWithAnswers) {
-    //     function showQuestion() {
-    //         console.log(questionwithAnswers.question);
-    //         for (const answer of questionwithAnswers.answers) {
-    //             console.log(answer.answer);
-    //         }
-    //     }
-    // }
 
-    // setInterval(showQuestion, 3000);
-
-    function dosetInterval(i) {
-        setInterval(function () { console.log(questionsWithAnswers[i].question) }, 3000);
+    function dosetTimeout(i) {
+        setTimeout(function () {
+            console.log(questionsWithAnswers[i].question);
+            for (const answer of questionsWithAnswers[i].answers) {
+                console.log(answer.answer);
+            }
+        }, i * 1000);
     }
 
     for (let i = 0; i < questionsWithAnswers.length; i++) {
-        dosetInterval(i);
+        dosetTimeout(i);
     }
 
-
-    // function setDelay(i) {
-    //     setTimeout(function () {
-    //         console.log(i);
-    //     }, 1000);
-    // }
-
-
-
-    // for (let i = 0; i < questionsWithAnswers.length; i++) {
-    //     console.log(questionsWithAnswers[i].question)
-
-    //     for (let x = 0; x < questionsWithAnswers[i].answers.length; x++)
-    //         console.log(questionsWithAnswers[i].answers[x].answer)
-    // }
-
-})
+});
 
 describe("comprobador de respuestas", function () {
     const questionWithAnswers = {
