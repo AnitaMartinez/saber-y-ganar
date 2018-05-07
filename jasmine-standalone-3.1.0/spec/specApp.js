@@ -11,49 +11,49 @@
 
 describe('winner"s calculation', function () {
 
-let players;
+    let players;
 
-  beforeEach(function() {
-    players = [
-      {
-        name: "Laura",
-        points: 33
-      },
-      {
-        name: "Elisa",
-        points: 5
-      },
-      {
-        name: "Jose",
-        points: 20
-      }
-    ]
- });
+    beforeEach(function () {
+        players = [
+            {
+                name: "Laura",
+                points: 33
+            },
+            {
+                name: "Elisa",
+                points: 5
+            },
+            {
+                name: "Jose",
+                points: 20
+            }
+        ]
+    });
 
-  const calculateWinner = () => {
-    let winners = [];
-    let points = 0;
-    for (const player of players) {
-      if (player.points > points) {
-        points = player.points;
-        winners = [];
-        winners.push(player);
-      }
-      else if (player.points === points) {
-        winners.push(player);
-      }
+    const calculateWinner = () => {
+        let winners = [];
+        let points = 0;
+        for (const player of players) {
+            if (player.points > points) {
+                points = player.points;
+                winners = [];
+                winners.push(player);
+            }
+            else if (player.points === points) {
+                winners.push(player);
+            }
+        }
+        return winners;
     }
-    return winners;
-  }
 
-  it("checks that the winning user is the one with most points", function () {
-    expect(calculateWinner(players)).toEqual([{name: "Laura", points: 33}]);
-    expect(calculateWinner(players)).not.toBe([{name: "Laura", points: 33}]);
-  });
-  it("detects a tie", function () {
-    players[1].points = 33;
-    expect(calculateWinner(players)).toEqual([{name: "Laura", points: 33}, {name: "Elisa", points: 33}]);
-  });
+    it("checks that the winning user is the one with most points", function () {
+        expect(calculateWinner(players)).toEqual([{ name: "Laura", points: 33 }]);
+        expect(calculateWinner(players)).not.toBe([{ name: "Laura", points: 33 }]);
+    });
+    it("detects a tie", function () {
+        players[1].points = 33;
+        expect(calculateWinner(players)).toEqual([{ name: "Laura", points: 33 }, { name: "Elisa", points: 33 }]);
+    });
 });
 
 
@@ -146,8 +146,8 @@ describe('calculo de marcador', function () {
            (pregunta, respuesta que no pertenece a la pregunta, ) -> False
 * */
 
-describe ("array preguntas", function () {
-    const questionWithAnswers =  [{
+describe("array preguntas", function () {
+    const questionsWithAnswers = [{
         id: 1,
         question: "¿Cuál es la capital de Portugal?",
         answers: [
@@ -174,13 +174,42 @@ describe ("array preguntas", function () {
             { id: 3, answer: "Lisboa", isCorrect: false, idQuestion: 3 }
         ]
     }
-  ]
-     for ( let i = 0; i < questionWithAnswers.length; i++ ){
-         console.log(questionWithAnswers[i].question)
+    ]
 
-         for (let x = 0; x < questionWithAnswers[i].answers.length; x++)
-         console.log(questionWithAnswers[i].answers[x].answer)
-     }
+    // for (const questionwithAnswers of questionsWithAnswers) {
+    //     function showQuestion() {
+    //         console.log(questionwithAnswers.question);
+    //         for (const answer of questionwithAnswers.answers) {
+    //             console.log(answer.answer);
+    //         }
+    //     }
+    // }
+
+    // setInterval(showQuestion, 3000);
+
+    function dosetInterval(i) {
+        setInterval(function () { console.log(questionsWithAnswers[i].question) }, 3000);
+    }
+
+    for (let i = 0; i < questionsWithAnswers.length; i++) {
+        dosetInterval(i);
+    }
+
+
+    // function setDelay(i) {
+    //     setTimeout(function () {
+    //         console.log(i);
+    //     }, 1000);
+    // }
+
+
+
+    // for (let i = 0; i < questionsWithAnswers.length; i++) {
+    //     console.log(questionsWithAnswers[i].question)
+
+    //     for (let x = 0; x < questionsWithAnswers[i].answers.length; x++)
+    //         console.log(questionsWithAnswers[i].answers[x].answer)
+    // }
 
 })
 
