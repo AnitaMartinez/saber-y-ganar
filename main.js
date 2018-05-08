@@ -8,15 +8,11 @@ var application = (function () {
     const answersUser = [];
 
     function start() {
+        const buttonStartGame = document.getElementById("button-init-questions");
+        buttonStartGame.addEventListener("click", initGame);
         const buttonSendQuestion = document.getElementById("button-send-question");
-        buttonSendQuestion.addEventListener("click", handleEvents);
-        getQuestions(data => {
-            questionsWithAnswers = data;
-        });
-    }
-
-    function handleEvents() {  //borrar 
-        onNextQuestion();
+        buttonSendQuestion.addEventListener("click", onNextQuestion);
+        getQuestions(data => questionsWithAnswers = data);
     }
 
     function getQuestions(callback) {
@@ -55,45 +51,27 @@ var application = (function () {
         callback(serverData);
     }
 
+    function initGame() {
+        showButtonNextQuestion();
+        paintQuestion(currentQuestion());
+        prepareNextQuestion();
+        getInfoAnswerUser();
+    }
+
+    function showButtonNextQuestion() {
+        const buttonSendQuestion = document.getElementById("button-send-question");
+        buttonSendQuestion.classList.remove('hidden');
+    }
+
     function onNextQuestion() {
         if (areThereMoreQuestions()) {
             paintQuestion(currentQuestion());
 
         }
-        getInfoAnswerUser(); //Estoy poniendo todas aquí, pero no estoy segura
-        // saveInfoAnswerUser();
+        getInfoAnswerUser();
+        saveInfoAnswerUser();
         prepareNextQuestion();
     }
-
-    function getInfoAnswerUser() {
-        const inputsRadio = document.getElementsByClassName('input-radio');
-        for (let i = 0; i < inputsRadio.length; i++) {
-            inputsRadio[i].addEventListener("click", getIdsAnswer);
-        }
-        function getIdsAnswer(event) {
-            currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
-            answerUserId = parseInt(event.currentTarget.value);
-        }
-        saveInfoAnswerUser();
-
-    }
-
-    function saveInfoAnswerUser() {
-        answersUser.push({ idQuestion: currentIdQuestion, idAnswer: answerUserId });
-
-        if (currentIdQuestion !== undefined) { //Esto es porque mi botón de enviar parte de 0, tendría que corregir el botón y borrar este if
-
-            if (answerUserId === questionsWithAnswers[currentIdQuestion].correctAnswerId) {
-                console.log("Has acertado");
-            } else {
-                console.log("Has fallado");
-
-            }
-        }
-
-    }
-
-
 
     function areThereMoreQuestions() {
         return currentQuestionIndex < questionsWithAnswers.length;
@@ -124,29 +102,38 @@ var application = (function () {
         answersInputs = "";
     }
 
+    function getInfoAnswerUser() {
+        const inputsRadio = document.getElementsByClassName('input-radio');
+        for (let i = 0; i < inputsRadio.length; i++) {
+            inputsRadio[i].addEventListener("click", getIdsAnswer);
+        }
+        function getIdsAnswer(event) {
+            currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
+            answerUserId = parseInt(event.currentTarget.value);
+        }
+    }
+
+    function isAnswerCorrect() {
+        if (answerUserId === questionsWithAnswers[currentIdQuestion].correctAnswerId) {
+            console.log("Has acertado");
+            return true;
+        } else {
+            console.log("Has fallado");
+            return false;
+        }
+    }
+
+    function saveInfoAnswerUser() {
+        answersUser.push({
+            idQuestion: currentIdQuestion,
+            idAnswer: answerUserId,
+            isCorrect: isAnswerCorrect()
+        });
+        console.log(answersUser);
+    }
+
     return {
         start: start
     };
 
 }());
-
-// players = [
-//     {
-//         name: "Laura",
-//         answers: [
-//             { idQuestion: 1, idAnswer: 2 },
-//             { idQuestion: 2, idAnswer: 3 },
-//             { idQuestion: 3, idAnswer: 1 }
-//         ],
-//         points: 33
-//     },
-//     {
-//         name: "María",
-//         answers: [
-//             { idQuestion: 1, idAnswer: 1 },
-//             { idQuestion: 2, idAnswer: 3 },
-//             { idQuestion: 3, idAnswer: 1 }
-//         ],
-//         points: 20
-//     }
-// ];

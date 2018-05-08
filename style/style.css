@@ -1,4 +1,3 @@
-
 /* General */
 
 body {
@@ -24,6 +23,10 @@ li {
   
 button:focus, input:focus {
   outline: none;
+}
+
+.hidden {
+  display: none;
 }
 
 /* Header */
