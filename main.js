@@ -1,6 +1,17 @@
 var application = (function () {
     'use strict';
 
+    let questionsWithAnswers = [];
+    let currentQuestionIndex = 0;
+
+    function start() {
+        const buttonSendQuestion = document.getElementById("button-send-question");
+        buttonSendQuestion.addEventListener("click", onNextQuestion);
+        getQuestions(function (data) {
+            questionsWithAnswers = data;
+        });
+    }
+
     function getQuestions(callback) {
         var serverData = [
             {
@@ -34,19 +45,6 @@ var application = (function () {
         callback(serverData);
     }
 
-    let indexQuestion = 0;  //Está en el global
-
-    function currentQuestion() {
-        if (areThereMoreQuestions()) {
-            return questionsWithAnswers[indexQuestion];
-        }
-        throw "No hay más preguntas";
-    }
-
-    function prepareNextQuestion() {
-        ++indexQuestion;
-    }
-
     function onNextQuestion() {
         if (areThereMoreQuestions()) {
             paintQuestion(currentQuestion());
@@ -54,11 +52,19 @@ var application = (function () {
         prepareNextQuestion();
     }
 
-    function areThereMoreQuestions() {
-        return indexQuestion < questionsWithAnswers.length;
+    function currentQuestion() {
+        return questionsWithAnswers[currentQuestionIndex];
     }
 
-    const paintQuestion = (question) => {
+    function prepareNextQuestion() {
+        ++currentQuestionIndex;
+    }
+
+    function areThereMoreQuestions() {
+        return currentQuestionIndex < questionsWithAnswers.length;
+    }
+
+    function paintQuestion(question) {
         const questionsList = document.getElementById("questions-list");
         let titleQuestion;
         let answersInputs = "";
@@ -70,28 +76,13 @@ var application = (function () {
                 `<div>
                     <input type="radio" id=${answers.answerDescription} name="answer" value="answer">
                     <label for=${answers.answerDescription}>${answers.answerDescription}</label>
-                    </div>`
+                </div>`
             );
         }
         questionsList.innerHTML = titleQuestion + "<div class='answers-content'>" + answersInputs + "</div>";
         answersInputs = "";
-
-    };
-
-    const throwQuestions = () => {
-        const buttonSendQuestion = document.getElementById("button-send-question");
-        buttonSendQuestion.addEventListener("click", onNextQuestion);
-    };
-
-    //Get the data
-    let questionsWithAnswers = [];
-
-    function start() {
-        getQuestions(function (data) {
-            questionsWithAnswers = data;
-            throwQuestions();
-        });
     }
+
 
     return {
         start: start
