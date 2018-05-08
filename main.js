@@ -34,18 +34,28 @@
         callback(serverData);
     }
 
-    let indexQuestion = -1;  //Está en el global
+    let indexQuestion = 0;  //Está en el global
 
-    function nextQuestion() {
-        ++indexQuestion;
-        if (indexQuestion < questionsWithAnswers.length) {
+    function currentQuestion() {
+        if (areThereMoreQuestions()) {
             return questionsWithAnswers[indexQuestion];
         }
         throw "No hay más preguntas";
     }
 
+    function prepareNextQuestion() {
+        ++indexQuestion;
+    }
+
     function onNextQuestion() {
-        paintQuestion(nextQuestion());
+        if (areThereMoreQuestions()) {
+            paintQuestion(currentQuestion());
+        }
+        prepareNextQuestion();
+    }
+
+    function areThereMoreQuestions() {
+        return indexQuestion < questionsWithAnswers.length;
     }
 
     const paintQuestion = (question) => {
@@ -72,6 +82,7 @@
         const buttonSendQuestion = document.getElementById("button-send-question");
         buttonSendQuestion.addEventListener("click", onNextQuestion);
     };
+
 
     //Get the data
     let questionsWithAnswers = [];
