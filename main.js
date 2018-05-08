@@ -34,38 +34,84 @@
         callback(serverData);
     }
 
-    const throwQuestions = questionsWithAnswers => {
+    let indexQuestion = -1;  //Está en el global
+
+    function nextQuestion() {
+        ++indexQuestion;
+        if (indexQuestion < questionsWithAnswers.length) {
+            return questionsWithAnswers[indexQuestion];
+        }
+        throw "No hay más preguntas";
+    }
+
+    function onNextQuestion() {
+        paintQuestion(nextQuestion());
+    }
+
+    const paintQuestion = (question) => {
         const questionsList = document.getElementById("questions-list");
-        const buttonSendQuestion = document.getElementById("button-send-question");
         let titleQuestion;
         let answersInputs = "";
 
-        let i = 0;
-        function paintNextQuestion() {
-            if (i < questionsWithAnswers.length) {
-                titleQuestion = `<h5> ${questionsWithAnswers[i].question} </h5>`;
+        titleQuestion = `<h5> ${question.question} </h5>`;
 
-                for (const answers of questionsWithAnswers[i].answers) {
-                    answersInputs += (
-                        `<div>
-                        <input type="radio" id=${answers.answerDescription} name="answer" value="answer">
-                        <label for=${answers.answerDescription}>${answers.answerDescription}</label>
-                        </div>`
-                    );
-                }
-                questionsList.innerHTML = titleQuestion + "<div class='answers-content'>" + answersInputs + "</div>";
-                i++;
-                answersInputs = "";
-            }
+        for (const answers of question.answers) {
+            answersInputs += (
+                `<div>
+                    <input type="radio" id=${answers.answerDescription} name="answer" value="answer">
+                    <label for=${answers.answerDescription}>${answers.answerDescription}</label>
+                    </div>`
+            );
         }
-        buttonSendQuestion.addEventListener("click", paintNextQuestion);
-    }
+        questionsList.innerHTML = titleQuestion + "<div class='answers-content'>" + answersInputs + "</div>";
+        answersInputs = "";
+
+    };
+
+    const throwQuestions = () => {
+        const buttonSendQuestion = document.getElementById("button-send-question");
+        buttonSendQuestion.addEventListener("click", onNextQuestion);
+    };
 
     //Get the data
     let questionsWithAnswers = [];
     getQuestions(function (data) {
         questionsWithAnswers = data;
-        throwQuestions(questionsWithAnswers);
+        throwQuestions();
     });
 
+
+
 }());
+
+// players = [
+//     {
+//         name: "Laura",
+//         answers: [
+//             { idQuestion: 1, idAnswer: 2 },
+//             { idQuestion: 2, idAnswer: 3 },
+//             { idQuestion: 3, idAnswer: 1 }
+//         ],
+//         points: 33
+//     },
+//     {
+//         name: "María",
+//         answers: [
+//             { idQuestion: 1, idAnswer: 1 },
+//             { idQuestion: 2, idAnswer: 3 },
+//             { idQuestion: 3, idAnswer: 1 }
+//         ],
+//         points: 20
+//     }
+// ];
+
+// const player = {
+//     answers: [
+//         { idQuestion: 0, idAnswer: 0 }
+//     ],
+//     points: 0
+// };
+
+// const getValueAnswer = () => {
+
+// };
