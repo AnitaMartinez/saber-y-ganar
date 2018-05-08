@@ -1,4 +1,4 @@
-(function () {
+var application = (function () {
     'use strict';
 
     function getQuestions(callback) {
@@ -83,13 +83,19 @@
         buttonSendQuestion.addEventListener("click", onNextQuestion);
     };
 
-
     //Get the data
     let questionsWithAnswers = [];
-    getQuestions(function (data) {
-        questionsWithAnswers = data;
-        throwQuestions();
-    });
+
+    function start() {
+        getQuestions(function (data) {
+            questionsWithAnswers = data;
+            throwQuestions();
+        });
+    }
+
+    return {
+        start: start
+    };
 
 
 
