@@ -5,6 +5,7 @@ var application = (function () {
     let currentQuestionIndex = 0;
     let answerUserId;
     let currentIdQuestion;
+    const answersUser = [];
 
     function start() {
         const buttonSendQuestion = document.getElementById("button-send-question");
@@ -14,15 +15,14 @@ var application = (function () {
         });
     }
 
-    function handleEvents() {
+    function handleEvents() {  //borrar 
         onNextQuestion();
-        saveInfoAnswerUser();
     }
 
     function getQuestions(callback) {
         var serverData = [
             {
-                id: 1,
+                id: 0,
                 questionText: "¿Cuál es la capital de Portugal?",
                 answers: [
                     { id: 1, answerText: "Faro", idQuestion: 1 },
@@ -32,7 +32,7 @@ var application = (function () {
                 correctAnswerId: 3
             },
             {
-                id: 2,
+                id: 1,
                 questionText: "¿Cuál es la capital de Egipto?",
                 answers: [
                     { id: 1, answerText: "Faro", idQuestion: 2 },
@@ -42,7 +42,7 @@ var application = (function () {
                 correctAnswerId: 2
             },
             {
-                id: 3,
+                id: 2,
                 questionText: "¿Cuál es la capital de España?",
                 answers: [
                     { id: 1, answerText: "Madrid", idQuestion: 3 },
@@ -60,32 +60,38 @@ var application = (function () {
             paintQuestion(currentQuestion());
 
         }
-        getInfoAnswerUser();
+        getInfoAnswerUser(); //Estoy poniendo todas aquí, pero no estoy segura
+        // saveInfoAnswerUser();
         prepareNextQuestion();
     }
 
-    //Por refactorizar: 
-
     function getInfoAnswerUser() {
-        var radios = document.querySelectorAll('.input'); //Cambiar el queryselector
-        for (let i = 0; i < radios.length; i++) {
-            radios[i].addEventListener("click", getValue);
+        const inputsRadio = document.getElementsByClassName('input-radio');
+        for (let i = 0; i < inputsRadio.length; i++) {
+            inputsRadio[i].addEventListener("click", getIdsAnswer);
         }
-        function getValue(event) {
-            currentIdQuestion = event.currentTarget.dataset.idquestion;
-            answerUserId = event.currentTarget.value;
+        function getIdsAnswer(event) {
+            currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
+            answerUserId = parseInt(event.currentTarget.value);
         }
-    }
+        saveInfoAnswerUser();
 
-    const answersUser = [];
+    }
 
     function saveInfoAnswerUser() {
         answersUser.push({ idQuestion: currentIdQuestion, idAnswer: answerUserId });
-        console.log(answersUser);
+
+        if (currentIdQuestion !== undefined) { //Esto es porque mi botón de enviar parte de 0, tendría que corregir el botón y borrar este if
+
+            if (answerUserId === questionsWithAnswers[currentIdQuestion].correctAnswerId) {
+                console.log("Has acertado");
+            } else {
+                console.log("Has fallado");
+
+            }
+        }
 
     }
-
-    //Hasta aquí
 
 
 
@@ -109,7 +115,7 @@ var application = (function () {
         for (const answer of question.answers) {
             answersInputs += (
                 `<div>
-                    <input class="input" type="radio" data-idquestion=${question.id} value=${answer.id} id=${answer.answerText} name="answers">
+                    <input class="input-radio" type="radio" data-idquestion=${question.id} value=${answer.id} id=${answer.answerText} name="answers">
                     <label for=${answer.answerText}> ${answer.answerText} </label>
                 </div>`
             );
