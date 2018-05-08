@@ -3,43 +3,53 @@ var application = (function () {
 
     let questionsWithAnswers = [];
     let currentQuestionIndex = 0;
+    let answerUserId;
+    let currentIdQuestion;
 
     function start() {
         const buttonSendQuestion = document.getElementById("button-send-question");
-        buttonSendQuestion.addEventListener("click", onNextQuestion);
-        getQuestions(function (data) {
+        buttonSendQuestion.addEventListener("click", handleEvents);
+        getQuestions(data => {
             questionsWithAnswers = data;
         });
+    }
+
+    function handleEvents() {
+        onNextQuestion();
+        saveInfoAnswerUser();
     }
 
     function getQuestions(callback) {
         var serverData = [
             {
                 id: 1,
-                question: "¿Cuál es la capital de Portugal?",
+                questionText: "¿Cuál es la capital de Portugal?",
                 answers: [
-                    { id: 1, answerDescription: "Faro", isCorrect: false, idQuestion: 1 },
-                    { id: 2, answerDescription: "Oporto", isCorrect: false, idQuestion: 1 },
-                    { id: 3, answerDescription: "Lisboa", isCorrect: true, idQuestion: 1 }
-                ]
+                    { id: 1, answerText: "Faro", idQuestion: 1 },
+                    { id: 2, answerText: "Oporto", idQuestion: 1 },
+                    { id: 3, answerText: "Lisboa", idQuestion: 1 }
+                ],
+                correctAnswerId: 3
             },
             {
                 id: 2,
-                question: "¿Cuál es la capital de Egipto?",
+                questionText: "¿Cuál es la capital de Egipto?",
                 answers: [
-                    { id: 1, answerDescription: "Faro", isCorrect: false, idQuestion: 2 },
-                    { id: 2, answerDescription: "El Cairo", isCorrect: true, idQuestion: 2 },
-                    { id: 3, answerDescription: "Lisboa", isCorrect: false, idQuestion: 2 }
-                ]
+                    { id: 1, answerText: "Faro", idQuestion: 2 },
+                    { id: 2, answerText: "El Cairo", idQuestion: 2 },
+                    { id: 3, answerText: "Lisboa", idQuestion: 2 }
+                ],
+                correctAnswerId: 2
             },
             {
                 id: 3,
-                question: "¿Cuál es la capital de España?",
+                questionText: "¿Cuál es la capital de España?",
                 answers: [
-                    { id: 1, answerDescription: "Madrid", isCorrect: true, idQuestion: 3 },
-                    { id: 2, answerDescription: "Oporto", isCorrect: false, idQuestion: 3 },
-                    { id: 3, answerDescription: "Lisboa", isCorrect: false, idQuestion: 3 }
-                ]
+                    { id: 1, answerText: "Madrid", idQuestion: 3 },
+                    { id: 2, answerText: "Oporto", idQuestion: 3 },
+                    { id: 3, answerText: "Lisboa", idQuestion: 3 }
+                ],
+                correctAnswerId: 1
             }
         ];
         callback(serverData);
@@ -48,8 +58,39 @@ var application = (function () {
     function onNextQuestion() {
         if (areThereMoreQuestions()) {
             paintQuestion(currentQuestion());
+
         }
+        getInfoAnswerUser();
         prepareNextQuestion();
+    }
+
+    //Por refactorizar: 
+
+    function getInfoAnswerUser() {
+        var radios = document.querySelectorAll('.input'); //Cambiar el queryselector
+        for (let i = 0; i < radios.length; i++) {
+            radios[i].addEventListener("click", getValue);
+        }
+        function getValue(event) {
+            currentIdQuestion = event.currentTarget.dataset.idquestion;
+            answerUserId = event.currentTarget.value;
+        }
+    }
+
+    const answersUser = [];
+
+    function saveInfoAnswerUser() {
+        answersUser.push({ idQuestion: currentIdQuestion, idAnswer: answerUserId });
+        console.log(answersUser);
+
+    }
+
+    //Hasta aquí
+
+
+
+    function areThereMoreQuestions() {
+        return currentQuestionIndex < questionsWithAnswers.length;
     }
 
     function currentQuestion() {
@@ -60,22 +101,16 @@ var application = (function () {
         ++currentQuestionIndex;
     }
 
-    function areThereMoreQuestions() {
-        return currentQuestionIndex < questionsWithAnswers.length;
-    }
-
     function paintQuestion(question) {
         const questionsList = document.getElementById("questions-list");
         let titleQuestion;
         let answersInputs = "";
-
-        titleQuestion = `<h5> ${question.question} </h5>`;
-
-        for (const answers of question.answers) {
+        titleQuestion = `<h5> ${question.questionText} </h5>`;
+        for (const answer of question.answers) {
             answersInputs += (
                 `<div>
-                    <input type="radio" id=${answers.answerDescription} name="answer" value="answer">
-                    <label for=${answers.answerDescription}>${answers.answerDescription}</label>
+                    <input class="input" type="radio" data-idquestion=${question.id} value=${answer.id} id=${answer.answerText} name="answers">
+                    <label for=${answer.answerText}> ${answer.answerText} </label>
                 </div>`
             );
         }
@@ -83,12 +118,9 @@ var application = (function () {
         answersInputs = "";
     }
 
-
     return {
         start: start
     };
-
-
 
 }());
 
@@ -112,14 +144,3 @@ var application = (function () {
 //         points: 20
 //     }
 // ];
-
-// const player = {
-//     answers: [
-//         { idQuestion: 0, idAnswer: 0 }
-//     ],
-//     points: 0
-// };
-
-// const getValueAnswer = () => {
-
-// };
