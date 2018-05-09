@@ -69,16 +69,19 @@ var application = (function () {
             prepareAnswersToBeClicked();
             saveInfoAnswerUser();
             prepareNextQuestion();
-
         } else {
-            alert("error");
+            if (isAnyAnswerChecked() !== true) {
+                forceUserToAnswer();
+            }
+            if (areThereMoreQuestions() !== true) {
+                saveInfoAnswerUser();
+                //And go back to the beginning of the game
+            }
         }
-
     }
 
     function isAnyAnswerChecked() {
         const inputsRadio = document.getElementsByClassName('input-radio');
-
         for (let i = 0; i < inputsRadio.length; i++) {
             if (inputsRadio[i].checked === true) {
                 return true;
@@ -165,6 +168,10 @@ var application = (function () {
             console.log("Has fallado");
             return false;
         }
+    }
+
+    function forceUserToAnswer() {
+        alert("Elige una respuesta antes de pasar a la siguiente");
     }
 
     return {
