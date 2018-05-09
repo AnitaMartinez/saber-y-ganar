@@ -1,4 +1,4 @@
-var application = (function () {
+const application = (function () {
     'use strict';
 
     let questionsWithAnswers = [];
@@ -58,17 +58,13 @@ var application = (function () {
         prepareNextQuestion();
     }
 
-    function showButtonNextQuestion() {
-        const buttonSendQuestion = document.getElementById("button-send-question");
-        buttonSendQuestion.classList.remove('hidden');
-    }
-
     function onNextQuestion() {
         if (areThereMoreQuestions() && isAnyAnswerChecked()) {
             paintQuestion(currentQuestion());
             prepareAnswersToBeClicked();
             saveInfoAnswerUser();
             prepareNextQuestion();
+            setTimeout(countDown, 3000);
         } else {
             if (isAnyAnswerChecked() !== true) {
                 forceUserToAnswer();
@@ -80,6 +76,25 @@ var application = (function () {
         }
     }
 
+
+    function countDown() {
+        if (areThereMoreQuestions()) {
+            paintQuestion(currentQuestion());
+            prepareAnswersToBeClicked();
+            saveInfoAnswerUser();
+            prepareNextQuestion();
+            setTimeout(countDown, 3000);
+        } else if (areThereMoreQuestions() !== true) {
+            saveInfoAnswerUser();
+            //And go back to the beginning of the game
+        }
+    }
+
+
+    function areThereMoreQuestions() {
+        return currentQuestionIndex < questionsWithAnswers.length;
+    }
+
     function isAnyAnswerChecked() {
         const inputsRadio = document.getElementsByClassName('input-radio');
         for (let i = 0; i < inputsRadio.length; i++) {
@@ -87,10 +102,6 @@ var application = (function () {
                 return true;
             }
         }
-    }
-
-    function areThereMoreQuestions() {
-        return currentQuestionIndex < questionsWithAnswers.length;
     }
 
     function currentQuestion() {
@@ -118,6 +129,11 @@ var application = (function () {
         answersInputs = "";
     }
 
+    function showButtonNextQuestion() {
+        const buttonSendQuestion = document.getElementById("button-send-question");
+        buttonSendQuestion.classList.remove('hidden');
+    }
+
     function prepareAnswersToBeClicked() {
         const inputsRadio = document.getElementsByClassName('input-radio');
         for (let i = 0; i < inputsRadio.length; i++) {
@@ -126,13 +142,31 @@ var application = (function () {
     }
 
     function handleClickInAnswers(event) {
-        getInfoAnswerUser(event);
+        getInfoAnswerUser();
         checkAnswerSelected(event);
     }
 
-    function getInfoAnswerUser(event) {
-        currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
-        answerUserId = parseInt(event.currentTarget.value);
+    function getInfoAnswerUser() {
+        const inputsRadio = document.getElementsByClassName('input-radio');
+
+        if (isThereAnyCheckedAnswer()) {
+            currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
+            answerUserId = parseInt(event.currentTarget.value);
+        }
+        if (isThereAnyCheckedAnswer() !== true) {
+            console.log("asdf");
+            currentIdQuestion = parseInt(currentIdQuestion);
+            answerUserId = null;
+        }
+    }
+
+    function isThereAnyCheckedAnswer() {  //Quizás puedo sustituir esto por un método funcional
+        const inputsRadio = document.getElementsByClassName('input-radio');
+        for (let i = 0; i < inputsRadio.length; i++) {
+            if (inputsRadio[i].checked === true) {
+                return true;
+            }
+        }
     }
 
     function checkAnswerSelected() {
