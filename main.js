@@ -104,12 +104,22 @@ var application = (function () {
 
     function getInfoAnswerUser() {
         const inputsRadio = document.getElementsByClassName('input-radio');
+
+
         for (let i = 0; i < inputsRadio.length; i++) {
             inputsRadio[i].addEventListener("click", getIdsAnswer);
         }
         function getIdsAnswer(event) {
             currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
             answerUserId = parseInt(event.currentTarget.value);
+
+
+            for (let i = 0; i < inputsRadio.length; i++) {
+                inputsRadio[i].removeAttribute("checked");
+            }
+
+            event.currentTarget.setAttribute("checked", "");
+
         }
     }
 
