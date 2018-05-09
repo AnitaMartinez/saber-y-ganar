@@ -7,6 +7,8 @@ const application = (function () {
     let currentIdQuestion;
     const answersUser = [];
 
+    let timer;
+
     function start() {
         const buttonStartGame = document.getElementById("button-init-questions");
         buttonStartGame.addEventListener("click", initGame);
@@ -21,9 +23,9 @@ const application = (function () {
                 id: 0,
                 questionText: "¿Cuál es la capital de Portugal?",
                 answers: [
-                    { id: 1, answerText: "Faro", idQuestion: 1 },
-                    { id: 2, answerText: "Oporto", idQuestion: 1 },
-                    { id: 3, answerText: "Lisboa", idQuestion: 1 }
+                    { id: 1, answerText: "Faro", idQuestion: 0 },
+                    { id: 2, answerText: "Oporto", idQuestion: 0 },
+                    { id: 3, answerText: "Lisboa", idQuestion: 0 }
                 ],
                 correctAnswerId: 3
             },
@@ -31,9 +33,9 @@ const application = (function () {
                 id: 1,
                 questionText: "¿Cuál es la capital de Egipto?",
                 answers: [
-                    { id: 1, answerText: "Faro", idQuestion: 2 },
-                    { id: 2, answerText: "El Cairo", idQuestion: 2 },
-                    { id: 3, answerText: "Lisboa", idQuestion: 2 }
+                    { id: 1, answerText: "Faro", idQuestion: 1 },
+                    { id: 2, answerText: "El Cairo", idQuestion: 1 },
+                    { id: 3, answerText: "Lisboa", idQuestion: 1 }
                 ],
                 correctAnswerId: 2
             },
@@ -41,11 +43,21 @@ const application = (function () {
                 id: 2,
                 questionText: "¿Cuál es la capital de España?",
                 answers: [
-                    { id: 1, answerText: "Madrid", idQuestion: 3 },
-                    { id: 2, answerText: "Oporto", idQuestion: 3 },
-                    { id: 3, answerText: "Lisboa", idQuestion: 3 }
+                    { id: 1, answerText: "Madrid", idQuestion: 2 },
+                    { id: 2, answerText: "Oporto", idQuestion: 2 },
+                    { id: 3, answerText: "Lisboa", idQuestion: 2 }
                 ],
                 correctAnswerId: 1
+            },
+            {
+                id: 3,
+                questionText: "¿Cuál es la capital de Francia?",
+                answers: [
+                    { id: 1, answerText: "Madrid", idQuestion: 3 },
+                    { id: 2, answerText: "París", idQuestion: 3 },
+                    { id: 3, answerText: "Lisboa", idQuestion: 3 }
+                ],
+                correctAnswerId: 3
             }
         ];
         callback(serverData);
@@ -59,36 +71,50 @@ const application = (function () {
     }
 
     function onNextQuestion() {
-        if (areThereMoreQuestions() && isAnyAnswerChecked()) {
+        // && isAnyAnswerChecked()
+        if (areThereMoreQuestions()) {
             paintQuestion(currentQuestion());
             prepareAnswersToBeClicked();
             saveInfoAnswerUser();
+
+            startCountDown();
+
             prepareNextQuestion();
-            setTimeout(countDown, 3000);
+            // timer = window.setTimeout(countDown, 3000);
+
         } else {
-            if (isAnyAnswerChecked() !== true) {
-                forceUserToAnswer();
-            }
+            // if (isAnyAnswerChecked() !== true) {
+            //     forceUserToAnswer();
+            // }
             if (areThereMoreQuestions() !== true) {
                 saveInfoAnswerUser();
+                window.clearTimeout(timer);
                 //And go back to the beginning of the game
             }
         }
     }
 
 
-    function countDown() {
-        if (areThereMoreQuestions()) {
-            paintQuestion(currentQuestion());
-            prepareAnswersToBeClicked();
-            saveInfoAnswerUser();
-            prepareNextQuestion();
-            setTimeout(countDown, 3000);
-        } else if (areThereMoreQuestions() !== true) {
-            saveInfoAnswerUser();
-            //And go back to the beginning of the game
-        }
+    const timerDom = document.getElementById("timer");
+    var acumulador = 0;
+
+    function startCountDown() {
+        var myVar = setInterval(function () {
+            timerDom.innerHTML = acumulador;
+            acumulador++;
+            if (acumulador > 5) {
+                console.log("hola");
+                acumulador = 0;
+                timerDom.innerHTML = acumulador;
+                clearInterval(myVar);
+            }
+        }, 1000);
     }
+
+    // function countDown() {
+    //     window.clearTimeout(timer);
+    //     onNextQuestion();
+    // }
 
 
     function areThereMoreQuestions() {
@@ -142,32 +168,15 @@ const application = (function () {
     }
 
     function handleClickInAnswers(event) {
-        getInfoAnswerUser();
         checkAnswerSelected(event);
+        getInfoAnswerUser();
     }
 
     function getInfoAnswerUser() {
-        const inputsRadio = document.getElementsByClassName('input-radio');
-
-        if (isThereAnyCheckedAnswer()) {
-            currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
-            answerUserId = parseInt(event.currentTarget.value);
-        }
-        if (isThereAnyCheckedAnswer() !== true) {
-            console.log("asdf");
-            currentIdQuestion = parseInt(currentIdQuestion);
-            answerUserId = null;
-        }
+        currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
+        answerUserId = parseInt(event.currentTarget.value);
     }
 
-    function isThereAnyCheckedAnswer() {  //Quizás puedo sustituir esto por un método funcional
-        const inputsRadio = document.getElementsByClassName('input-radio');
-        for (let i = 0; i < inputsRadio.length; i++) {
-            if (inputsRadio[i].checked === true) {
-                return true;
-            }
-        }
-    }
 
     function checkAnswerSelected() {
         unCheckAnswers();
