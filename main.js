@@ -7,14 +7,21 @@ const application = (function () {
     let currentIdQuestion;
     const answersUser = [];
 
-    let timer;
+    const timerDom = document.getElementById("timer");
+    var acumulador = 0;
+    var myVar;
 
     function start() {
         const buttonStartGame = document.getElementById("button-init-questions");
         buttonStartGame.addEventListener("click", initGame);
         const buttonSendQuestion = document.getElementById("button-send-question");
-        buttonSendQuestion.addEventListener("click", onNextQuestion);
+        buttonSendQuestion.addEventListener("click", patata);
         getQuestions(data => questionsWithAnswers = data);
+    }
+
+
+    function patata() {
+        onNextQuestion();
     }
 
     function getQuestions(callback) {
@@ -57,7 +64,7 @@ const application = (function () {
                     { id: 2, answerText: "París", idQuestion: 3 },
                     { id: 3, answerText: "Lisboa", idQuestion: 3 }
                 ],
-                correctAnswerId: 3
+                correctAnswerId: 2
             }
         ];
         callback(serverData);
@@ -71,6 +78,7 @@ const application = (function () {
     }
 
     function onNextQuestion() {
+        clearCountDown();
         // && isAnyAnswerChecked()
         if (areThereMoreQuestions()) {
             paintQuestion(currentQuestion());
@@ -80,7 +88,6 @@ const application = (function () {
             startCountDown();
 
             prepareNextQuestion();
-            // timer = window.setTimeout(countDown, 3000);
 
         } else {
             // if (isAnyAnswerChecked() !== true) {
@@ -94,27 +101,22 @@ const application = (function () {
         }
     }
 
-
-    const timerDom = document.getElementById("timer");
-    var acumulador = 0;
-
     function startCountDown() {
-        var myVar = setInterval(function () {
+        myVar = setInterval(function () {
             timerDom.innerHTML = acumulador;
             acumulador++;
             if (acumulador > 5) {
-                console.log("hola");
-                acumulador = 0;
-                timerDom.innerHTML = acumulador;
-                clearInterval(myVar);
+                clearCountDown();
+                onNextQuestion();
             }
         }, 1000);
     }
 
-    // function countDown() {
-    //     window.clearTimeout(timer);
-    //     onNextQuestion();
-    // }
+    function clearCountDown() {
+        clearInterval(myVar);
+        acumulador = 0;
+        timerDom.innerHTML = acumulador;
+    }
 
 
     function areThereMoreQuestions() {
