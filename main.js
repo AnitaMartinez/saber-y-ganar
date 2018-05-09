@@ -54,8 +54,8 @@ var application = (function () {
     function initGame() {
         showButtonNextQuestion();
         paintQuestion(currentQuestion());
+        prepareAnswersToBeClicked();
         prepareNextQuestion();
-        getInfoAnswerUser();
     }
 
     function showButtonNextQuestion() {
@@ -68,7 +68,7 @@ var application = (function () {
             paintQuestion(currentQuestion());
 
         }
-        getInfoAnswerUser();
+        prepareAnswersToBeClicked();
         saveInfoAnswerUser();
         prepareNextQuestion();
     }
@@ -102,26 +102,39 @@ var application = (function () {
         answersInputs = "";
     }
 
-    function getInfoAnswerUser() {
+    function prepareAnswersToBeClicked() {
         const inputsRadio = document.getElementsByClassName('input-radio');
-
-
         for (let i = 0; i < inputsRadio.length; i++) {
-            inputsRadio[i].addEventListener("click", getIdsAnswer);
-        }
-        function getIdsAnswer(event) {
-            currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
-            answerUserId = parseInt(event.currentTarget.value);
-
-
-            for (let i = 0; i < inputsRadio.length; i++) {
-                inputsRadio[i].removeAttribute("checked");
-            }
-
-            event.currentTarget.setAttribute("checked", "");
-
+            inputsRadio[i].addEventListener("click", handleClickInAnswers);
         }
     }
+
+    function handleClickInAnswers(event) {
+        getInfoAnswerUser(event);
+        checkAnswerSelected(event);
+    }
+
+    function getInfoAnswerUser(event) {
+        currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
+        answerUserId = parseInt(event.currentTarget.value);
+    }
+
+    function checkAnswerSelected() {
+        unCheckAnswers();
+        checkCurrentAnswer();
+    }
+
+    function unCheckAnswers() {
+        const inputsRadio = document.getElementsByClassName('input-radio');
+        for (let i = 0; i < inputsRadio.length; i++) {
+            inputsRadio[i].removeAttribute("checked");
+        }
+    }
+
+    function checkCurrentAnswer() {
+        event.currentTarget.setAttribute("checked", "");
+    }
+
 
     function isAnswerCorrect() {
         if (answerUserId === questionsWithAnswers[currentIdQuestion].correctAnswerId) {
