@@ -64,13 +64,26 @@ var application = (function () {
     }
 
     function onNextQuestion() {
-        if (areThereMoreQuestions()) {
+        if (areThereMoreQuestions() && isAnyAnswerChecked()) {
             paintQuestion(currentQuestion());
+            prepareAnswersToBeClicked();
+            saveInfoAnswerUser();
+            prepareNextQuestion();
 
+        } else {
+            alert("error");
         }
-        prepareAnswersToBeClicked();
-        saveInfoAnswerUser();
-        prepareNextQuestion();
+
+    }
+
+    function isAnyAnswerChecked() {
+        const inputsRadio = document.getElementsByClassName('input-radio');
+
+        for (let i = 0; i < inputsRadio.length; i++) {
+            if (inputsRadio[i].checked === true) {
+                return true;
+            }
+        }
     }
 
     function areThereMoreQuestions() {
@@ -135,6 +148,14 @@ var application = (function () {
         event.currentTarget.setAttribute("checked", "");
     }
 
+    function saveInfoAnswerUser() {
+        answersUser.push({
+            idQuestion: currentIdQuestion,
+            idAnswer: answerUserId,
+            isCorrect: isAnswerCorrect()
+        });
+        console.log(answersUser);
+    }
 
     function isAnswerCorrect() {
         if (answerUserId === questionsWithAnswers[currentIdQuestion].correctAnswerId) {
@@ -144,15 +165,6 @@ var application = (function () {
             console.log("Has fallado");
             return false;
         }
-    }
-
-    function saveInfoAnswerUser() {
-        answersUser.push({
-            idQuestion: currentIdQuestion,
-            idAnswer: answerUserId,
-            isCorrect: isAnswerCorrect()
-        });
-        console.log(answersUser);
     }
 
     return {
