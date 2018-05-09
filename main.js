@@ -79,8 +79,6 @@ const application = (function () {
     }
 
     function onNextQuestion() {
-
-
         if (areThereMoreQuestions() && isAnyAnswerChecked()) {
             clearCountDown();
             paintQuestion(currentQuestion());
@@ -90,30 +88,25 @@ const application = (function () {
             prepareNextQuestion();
 
         } else {
-            console.log(timeAccumulator);
-
             if (isAnyAnswerChecked() !== true && (timeAccumulator.accumulator > 5)) {
-                console.log("Se ha agotado");
                 clearCountDown();
-                answerUserId = null;
-                saveInfoAnswerUser();
+                answerUserId = null;   //Refactor
                 paintQuestion(currentQuestion());
                 startCountDown();
                 prepareAnswersToBeClicked();
-                prepareNextQuestion();
-            }
-
-            // if (isAnyAnswerChecked() !== true) {
-            //     forceUserToAnswer();
-            // }
-
-            //En la última me hace cosas raras
-            if (areThereMoreQuestions() !== true) {
                 saveInfoAnswerUser();
-                //And go back to the beginning of the game
+                prepareNextQuestion();
+            } else if (isAnyAnswerChecked() !== true && (timeAccumulator.accumulator < 5)) {
+                forceUserToAnswer();
+            }
+            if (areThereMoreQuestions() !== true) {
+                clearCountDown();
+                saveInfoAnswerUser();
+                console.log("Fin del juego"); //Volver al punto de partida
             }
         }
     }
+
 
     function startCountDown() {
         timeCounter = setInterval(function () {
