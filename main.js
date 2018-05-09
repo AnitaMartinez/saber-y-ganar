@@ -6,14 +6,12 @@ const application = (function () {
     let answerUserId;
     let currentIdQuestion;
     const answersUser = [];
-
-    const timerDom = document.getElementById("timer");
-    var acumulador = 0; //refactor
-    var timeCounter;
-
-    const timeAccumulator = {
+    let timeCounter;
+    const accumulatorTimeCounter = {
         accumulator: 0
-    }
+    };
+    const maximumTimeCounter = 20;
+
 
     function start() {
         const buttonStartGame = document.getElementById("button-init-questions");
@@ -22,7 +20,6 @@ const application = (function () {
         buttonSendQuestion.addEventListener("click", onNextQuestion);
         getQuestions(data => questionsWithAnswers = data);
     }
-
 
     function getQuestions(callback) {
         var serverData = [
@@ -75,60 +72,59 @@ const application = (function () {
         paintQuestion(currentQuestion());
         startCountDown();
         prepareAnswersToBeClicked();
-        prepareNextQuestion();
     }
 
     function onNextQuestion() {
-        if (areThereMoreQuestions() && isAnyAnswerChecked()) {
+        if (areThereMoreQuestions() !== true) {
             clearCountDown();
-            paintQuestion(currentQuestion());
-            startCountDown();
-            prepareAnswersToBeClicked();
             saveInfoAnswerUser();
-            prepareNextQuestion();
+            console.log("Fin del juego"); //Volver al punto de partida
+            return;
+        }
+
+        //Esta lógica está mal expresada, lo del else, podría pasar de lo del si hay más preguntas en los dos del else, ya que tengo un return arriba
+        if (areThereMoreQuestions() && isAnyAnswerChecked()) {
+            prepareStepsToPlayQuestion();
 
         } else {
-            if (isAnyAnswerChecked() !== true && (timeAccumulator.accumulator > 5)) {
-                clearCountDown();
+            if (isAnyAnswerChecked() !== true && (accumulatorTimeCounter.accumulator > maximumTimeCounter)) {
                 answerUserId = null;   //Refactor
-                paintQuestion(currentQuestion());
-                startCountDown();
-                prepareAnswersToBeClicked();
-                saveInfoAnswerUser();
-                prepareNextQuestion();
-            } else if (isAnyAnswerChecked() !== true && (timeAccumulator.accumulator < 5)) {
+                prepareStepsToPlayQuestion();
+
+            } else if (isAnyAnswerChecked() !== true && (accumulatorTimeCounter.accumulator < maximumTimeCounter)) {
                 forceUserToAnswer();
-            }
-            if (areThereMoreQuestions() !== true) {
-                clearCountDown();
-                saveInfoAnswerUser();
-                console.log("Fin del juego"); //Volver al punto de partida
             }
         }
     }
 
+    function prepareStepsToPlayQuestion() {
+        clearCountDown();
+        saveInfoAnswerUser();
+        paintQuestion(currentQuestion());
+        startCountDown();
+        prepareAnswersToBeClicked();
+    }
 
     function startCountDown() {
+        const timerDom = document.getElementById("timer");
         timeCounter = setInterval(function () {
-            timerDom.innerHTML = timeAccumulator.accumulator;  //Esto va en otra función porque es pintar
-            timeAccumulator.accumulator++;
-
-            if (timeAccumulator.accumulator > 5) {
+            timerDom.innerHTML = accumulatorTimeCounter.accumulator;  //Esto va en otra función porque es pintar
+            accumulatorTimeCounter.accumulator++;
+            if (accumulatorTimeCounter.accumulator > maximumTimeCounter) {
                 onNextQuestion();
             }
-
         }, 1000);
     }
 
     function clearCountDown() {
+        const timerDom = document.getElementById("timer");
         clearInterval(timeCounter);
-        timeAccumulator.accumulator = 0;
-        timerDom.innerHTML = timeAccumulator.accumulator; //Esto va en otra función porque es pintar
+        accumulatorTimeCounter.accumulator = 0;
+        timerDom.innerHTML = accumulatorTimeCounter.accumulator; //Esto va en otra función porque es pintar
     }
 
-
     function areThereMoreQuestions() {
-        return currentQuestionIndex < questionsWithAnswers.length;
+        return currentQuestionIndex < (questionsWithAnswers.length);
     }
 
     function isAnyAnswerChecked() {
@@ -144,11 +140,8 @@ const application = (function () {
         return questionsWithAnswers[currentQuestionIndex];
     }
 
-    function prepareNextQuestion() {
-        ++currentQuestionIndex;
-    }
-
     function paintQuestion(question) {
+        console.log("Al principio de paint: currentQuestionIndex: ", currentQuestionIndex);
         const questionsList = document.getElementById("questions-list");
         let titleQuestion;
         let answersInputs = "";
@@ -163,6 +156,7 @@ const application = (function () {
         }
         questionsList.innerHTML = titleQuestion + "<div class='answers-content'>" + answersInputs + "</div>";
         answersInputs = "";
+        ++currentQuestionIndex;  //refactor, porque esto no está pintando, pero llamarla aquí o tener cuidado con dónde la pongo
     }
 
     function showButtonNextQuestion() {
