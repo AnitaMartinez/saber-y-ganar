@@ -8,21 +8,21 @@ const application = (function () {
     const answersUser = [];
 
     const timerDom = document.getElementById("timer");
-    var acumulador = 0;
-    var myVar;
+    var acumulador = 0; //refactor
+    var timeCounter;
+
+    const timeAccumulator = {
+        accumulator: 0
+    }
 
     function start() {
         const buttonStartGame = document.getElementById("button-init-questions");
         buttonStartGame.addEventListener("click", initGame);
         const buttonSendQuestion = document.getElementById("button-send-question");
-        buttonSendQuestion.addEventListener("click", patata);
+        buttonSendQuestion.addEventListener("click", onNextQuestion);
         getQuestions(data => questionsWithAnswers = data);
     }
 
-
-    function patata() {
-        onNextQuestion();
-    }
 
     function getQuestions(callback) {
         var serverData = [
@@ -73,49 +73,64 @@ const application = (function () {
     function initGame() {
         showButtonNextQuestion();
         paintQuestion(currentQuestion());
+        startCountDown();
         prepareAnswersToBeClicked();
         prepareNextQuestion();
     }
 
     function onNextQuestion() {
-        clearCountDown();
-        // && isAnyAnswerChecked()
-        if (areThereMoreQuestions()) {
+
+
+        if (areThereMoreQuestions() && isAnyAnswerChecked()) {
+            clearCountDown();
             paintQuestion(currentQuestion());
+            startCountDown();
             prepareAnswersToBeClicked();
             saveInfoAnswerUser();
-
-            startCountDown();
-
             prepareNextQuestion();
 
         } else {
+            console.log(timeAccumulator);
+
+            if (isAnyAnswerChecked() !== true && (timeAccumulator.accumulator > 5)) {
+                console.log("Se ha agotado");
+                clearCountDown();
+                answerUserId = null;
+                saveInfoAnswerUser();
+                paintQuestion(currentQuestion());
+                startCountDown();
+                prepareAnswersToBeClicked();
+                prepareNextQuestion();
+            }
+
             // if (isAnyAnswerChecked() !== true) {
             //     forceUserToAnswer();
             // }
+
+            //En la última me hace cosas raras
             if (areThereMoreQuestions() !== true) {
                 saveInfoAnswerUser();
-                window.clearTimeout(timer);
                 //And go back to the beginning of the game
             }
         }
     }
 
     function startCountDown() {
-        myVar = setInterval(function () {
-            timerDom.innerHTML = acumulador;
-            acumulador++;
-            if (acumulador > 5) {
-                clearCountDown();
+        timeCounter = setInterval(function () {
+            timerDom.innerHTML = timeAccumulator.accumulator;  //Esto va en otra función porque es pintar
+            timeAccumulator.accumulator++;
+
+            if (timeAccumulator.accumulator > 5) {
                 onNextQuestion();
             }
+
         }, 1000);
     }
 
     function clearCountDown() {
-        clearInterval(myVar);
-        acumulador = 0;
-        timerDom.innerHTML = acumulador;
+        clearInterval(timeCounter);
+        timeAccumulator.accumulator = 0;
+        timerDom.innerHTML = timeAccumulator.accumulator; //Esto va en otra función porque es pintar
     }
 
 
@@ -206,12 +221,17 @@ const application = (function () {
     }
 
     function isAnswerCorrect() {
-        if (answerUserId === questionsWithAnswers[currentIdQuestion].correctAnswerId) {
-            console.log("Has acertado");
-            return true;
-        } else {
-            console.log("Has fallado");
+        if (answerUserId === null) {
+            console.log("Has fallado, puesto que no has contestado y se ha pasado el tiempo");
             return false;
+        } else {
+            if (answerUserId === questionsWithAnswers[currentIdQuestion].correctAnswerId) {
+                console.log("Has acertado");
+                return true;
+            } else {
+                console.log("Has fallado");
+                return false;
+            }
         }
     }
 
