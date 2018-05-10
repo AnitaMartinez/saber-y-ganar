@@ -10,7 +10,7 @@ const application = (function () {
     const accumulatorTimeCounter = {
         accumulator: 0
     };
-    const maximumTimeCounter = 20;
+    const maximumTimeCounter = 5;
 
     function start() {
         const buttonStartGame = document.getElementById("button-init-questions");
@@ -87,16 +87,25 @@ const application = (function () {
             prepareStepsToPlayQuestion();
 
         } else {
-            if (isAnyAnswerChecked() === false && (accumulatorTimeCounter.accumulator > maximumTimeCounter)) {
-                answerUserId = null;   //Refactor
+            if (isAnyAnswerChecked() === false && isCountdownRunOut()) {
+                markAnswerAsNotAnswered();
                 saveInfoAnswerUser();
                 prepareStepsToPlayQuestion();
 
-            } else if (isAnyAnswerChecked() === false && (accumulatorTimeCounter.accumulator < maximumTimeCounter)) {
+            } else if (isAnyAnswerChecked() === false && isCountdownRunOut() === false) {
                 forceUserToAnswer();
             }
         }
     }
+
+    function isCountdownRunOut() {
+        return accumulatorTimeCounter.accumulator > maximumTimeCounter;
+    }
+
+    function markAnswerAsNotAnswered() {
+        answerUserId = null;
+    }
+
 
     function prepareStepsToPlayQuestion() {
         clearCountDown();
