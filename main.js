@@ -98,8 +98,8 @@ const application = (function () {
     }
 
     function prepareStepsToPlayQuestion() {
-        clearCountDown();
         saveInfoAnswerUser();
+        clearCountDown();
         paintQuestion(currentQuestion());
         startCountDown();
         prepareAnswersToBeClicked();
@@ -202,7 +202,8 @@ const application = (function () {
         answersUser.push({
             idQuestion: currentIdQuestion,
             idAnswer: answerUserId,
-            isCorrect: isAnswerCorrect()
+            isCorrect: isAnswerCorrect(),
+            time: accumulatorTimeCounter.accumulator
         });
         console.log(answersUser);
     }
@@ -226,36 +227,26 @@ const application = (function () {
         alert("Elige una respuesta antes de pasar a la siguiente");
     }
 
-    //Marcador
-
-    // function calculatePointsCorrectAnswer(puntos, tiempo) {
-    //     switch (true) {
-    //         case tiempo <= 2: return puntos + 2;
-    //         case tiempo <= 10: return puntos + 1;
-    //         case tiempo > 10: return puntos;
-    //         default: ;
-    //     }
-    // }
-
-    function calculatePointsIncorrectAnswer(puntos, tiempo) {
-        switch (true) {
-            case tiempo > 20: return puntos - 3;
-            case tiempo > 10: return puntos - 2;
-            case tiempo <= 20: return puntos - 1;
-            default: ;
-        }
-    }
-
-    function calculatePointsNoAnswer(puntos) {
-        return puntos - 3;
-    }
-
-
-    function calculatePoints() {  //Aquí podría hacer filters
+    function calculatePoints() {
         let points = 0;
         for (let i = 0; i < answersUser.length; i++) {
-            if (answersUser[i].isCorrect === true) {
-                points += 3;
+            if (answersUser[i].isCorrect) {
+                if (answersUser[i].time <= 2) {
+                    points += 2;
+                } else if (answersUser[i].time <= 10) {
+                    points += 1;
+                } else if (answersUser[i].time > 10) {
+                    points += 0;
+                }
+            }
+            if (answersUser[i].isCorrect === false) {
+                if (answersUser[i].time > 20) {
+                    points -= 3;
+                } else if (answersUser[i].time > 10) {
+                    points -= 2;
+                } else {
+                    points -= 1;
+                }
             }
         }
         return points;
