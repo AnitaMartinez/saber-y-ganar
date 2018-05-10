@@ -12,11 +12,10 @@ const application = (function () {
     };
     const maximumTimeCounter = 20;
 
-
     function start() {
         const buttonStartGame = document.getElementById("button-init-questions");
-        buttonStartGame.addEventListener("click", initGame);
         const buttonSendQuestion = document.getElementById("button-send-question");
+        buttonStartGame.addEventListener("click", initGame);
         buttonSendQuestion.addEventListener("click", onNextQuestion);
         getQuestions(data => questionsWithAnswers = data);
     }
@@ -70,42 +69,43 @@ const application = (function () {
     function initGame() {
         showButtonNextQuestion();
         paintQuestion(currentQuestion());
-        startCountDown();
+        startCountdown();
         prepareAnswersToBeClicked();
     }
 
     function onNextQuestion() {
-        if (areThereMoreQuestions() !== true) {
+        if (areThereMoreQuestions() === false) {
             clearCountDown();
             saveInfoAnswerUser();
-            console.log("Fin del juego"); //Volver al punto de partida
-            paintScoreBoard();
+            console.log("Fin del juego");
+            paintScoreboard();
             return;
         }
         //Esta lógica está mal expresada, lo del else, podría pasar de lo del si hay más preguntas en los dos del else, ya que tengo un return arriba
         if (areThereMoreQuestions() && isAnyAnswerChecked()) {
+            saveInfoAnswerUser();
             prepareStepsToPlayQuestion();
 
         } else {
-            if (isAnyAnswerChecked() !== true && (accumulatorTimeCounter.accumulator > maximumTimeCounter)) {
+            if (isAnyAnswerChecked() === false && (accumulatorTimeCounter.accumulator > maximumTimeCounter)) {
                 answerUserId = null;   //Refactor
+                saveInfoAnswerUser();
                 prepareStepsToPlayQuestion();
 
-            } else if (isAnyAnswerChecked() !== true && (accumulatorTimeCounter.accumulator < maximumTimeCounter)) {
+            } else if (isAnyAnswerChecked() === false && (accumulatorTimeCounter.accumulator < maximumTimeCounter)) {
                 forceUserToAnswer();
             }
         }
     }
 
     function prepareStepsToPlayQuestion() {
-        saveInfoAnswerUser();
         clearCountDown();
         paintQuestion(currentQuestion());
-        startCountDown();
+        startCountdown();
         prepareAnswersToBeClicked();
     }
 
-    function startCountDown() {
+    function startCountdown() {
         const timerDom = document.getElementById("timer");
         timeCounter = setInterval(function () {
             timerDom.innerHTML = accumulatorTimeCounter.accumulator;  //Esto va en otra función porque es pintar
@@ -134,6 +134,7 @@ const application = (function () {
                 return true;
             }
         }
+        return false;
     }
 
     function currentQuestion() {
@@ -252,7 +253,7 @@ const application = (function () {
         return points;
     }
 
-    function paintScoreBoard() {
+    function paintScoreboard() {
         paintTotalPoints();
         paintCorrectAnswers();
         paintTotalAnswers();
