@@ -84,7 +84,6 @@ describe('winner"s calculation', function () {
 *
 * */
 
-
 describe('calculo de marcador', function () {
     function recalcularMarcadorEsCorreta(puntos, tiempo) {
         switch (true) {
@@ -201,8 +200,7 @@ describe("array preguntas", function () {
             { id: 3, answerDescritpion: "Ciudad de Panamá", isCorrect: true, idQuestion: 6 }
         ]
     }
-    ]
-
+    ];
 
     function dosetTimeout(i) {
         setTimeout(function () {
@@ -216,23 +214,6 @@ describe("array preguntas", function () {
     for (let i = 0; i < questionsWithAnswers.length; i++) {
         dosetTimeout(i);
     }
-
-    // function lanzaPregunta(){
-    //     var i = 0;
-    //     setInterval(function(){
-    //         if(i < questions.length){
-    //             console.log(questions[i].question);
-    //             for(let x = 0; x < questions[i].answer.length; x++){
-    //               console.log(questions[i].answer[x].value);
-    //             }
-    //             i++;
-    //         }
-    //     }, 1000);
-    //  }
-    //  lanzaPregunta();
-
-    //Habría que guardar el identificador del setinterval y luego pararlo, para que no esté corriendo todo el rato
-    // https://developer.mozilla.org/es/docs/Web/API/WindowTimers/setInterval
 });
 
 describe("comprobador de respuestas", function () {

@@ -79,9 +79,9 @@ const application = (function () {
             clearCountDown();
             saveInfoAnswerUser();
             console.log("Fin del juego"); //Volver al punto de partida
+            console.log(calculatePoints());
             return;
         }
-
         //Esta lógica está mal expresada, lo del else, podría pasar de lo del si hay más preguntas en los dos del else, ya que tengo un return arriba
         if (areThereMoreQuestions() && isAnyAnswerChecked()) {
             prepareStepsToPlayQuestion();
@@ -225,6 +225,45 @@ const application = (function () {
     function forceUserToAnswer() {
         alert("Elige una respuesta antes de pasar a la siguiente");
     }
+
+    //Marcador
+
+    // function calculatePointsCorrectAnswer(puntos, tiempo) {
+    //     switch (true) {
+    //         case tiempo <= 2: return puntos + 2;
+    //         case tiempo <= 10: return puntos + 1;
+    //         case tiempo > 10: return puntos;
+    //         default: ;
+    //     }
+    // }
+
+    function calculatePointsIncorrectAnswer(puntos, tiempo) {
+        switch (true) {
+            case tiempo > 20: return puntos - 3;
+            case tiempo > 10: return puntos - 2;
+            case tiempo <= 20: return puntos - 1;
+            default: ;
+        }
+    }
+
+    function calculatePointsNoAnswer(puntos) {
+        return puntos - 3;
+    }
+
+
+    function calculatePoints() {  //Aquí podría hacer filters
+        let points = 0;
+        for (let i = 0; i < answersUser.length; i++) {
+            if (answersUser[i].isCorrect === true) {
+                points += 3;
+            }
+        }
+        return points;
+    }
+
+
+
+
 
     return {
         start: start
