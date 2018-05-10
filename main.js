@@ -79,7 +79,7 @@ const application = (function () {
             clearCountDown();
             saveInfoAnswerUser();
             console.log("Fin del juego"); //Volver al punto de partida
-            console.log(calculatePoints());
+            paintScoreBoard();
             return;
         }
         //Esta lógica está mal expresada, lo del else, podría pasar de lo del si hay más preguntas en los dos del else, ya que tengo un return arriba
@@ -110,7 +110,7 @@ const application = (function () {
         timeCounter = setInterval(function () {
             timerDom.innerHTML = accumulatorTimeCounter.accumulator;  //Esto va en otra función porque es pintar
             accumulatorTimeCounter.accumulator++;
-            if (accumulatorTimeCounter.accumulator > maximumTimeCounter) {
+            if (accumulatorTimeCounter.accumulator > maximumTimeCounter) { //Esto ya es otra funcionalidad
                 onNextQuestion();
             }
         }, 1000);
@@ -252,9 +252,36 @@ const application = (function () {
         return points;
     }
 
+    function paintScoreBoard() {
+        paintTotalPoints();
+        paintCorrectAnswers();
+        paintTotalAnswers();
+    }
 
+    function paintTotalPoints() {
+        const txtTotalPoints = document.getElementById("total-points");
+        txtTotalPoints.innerText = calculatePoints();
+    }
 
+    function paintTotalAnswers() {
+        const txtTotalAnswers = document.getElementById("total-answers");
+        txtTotalAnswers.innerText = answersUser.length;
+    }
 
+    function paintCorrectAnswers() {
+        const text = document.getElementById("correct-answers");
+        text.innerText = calculateNumberOfCorrectAnswers();
+    }
+
+    function calculateNumberOfCorrectAnswers() {
+        let accumulatorAnswers = 0;
+        for (let i = 0; i < answersUser.length; i++) {
+            if (answersUser[i].isCorrect === true) {
+                accumulatorAnswers += 1;
+            }
+        }
+        return accumulatorAnswers;
+    }
 
     return {
         start: start
