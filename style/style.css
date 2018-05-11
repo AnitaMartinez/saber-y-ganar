@@ -6,6 +6,7 @@ body {
   font-family: 'Gothic A1', sans-serif;
   font-weight: 300;
   font-size: 16px;
+  line-height: 1;
 }
 
 a {
@@ -19,6 +20,10 @@ ul {
   
 li {
   list-style-type: none;
+}
+
+button, input {
+  font-size:inherit;
 }
   
 button:focus, input:focus {
@@ -43,21 +48,70 @@ button:focus, input:focus {
   margin: 0;
 }
 
+.title-md {
+  background-color: rgbA(0, 163, 202, 0.2);
+}
+
+.title-sm {
+  font-weight: inherit;
+}
+
 .title-xs {
-  font-size: 15px;
+  font-size: 16px;
   margin: 20px 0 0 0;
 }
 
 /* main */
 
 .content {
-  padding-left: 40px;
-  padding-top: 40px;
+  padding: 40px 40px 0 40px;
 }
+
+/* .separator {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #00a3ca;
+  margin: 1em 0;
+  padding: 0; 
+} */
 
 /* questions */
 
-.answers-content {
+.container-answers {
   display: flex;
   flex-direction: column;
+}
+
+.container-questions {
+  display: flex;
+  justify-content: center;
+}
+
+/* Components */ 
+
+.button-start {
+  background-color: rgba(248, 152, 17, 0.9);
+  border: 1px solid  #f29819;
+  color: #FFF;
+  padding: 10px 12px;
+  border-radius: 5px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.button-start:hover {
+  background-color: rgba(248, 152, 17, 1);
+}
+
+/* Scoreboard */ 
+
+.total-points {
+  font-size: 38px;
+  color: #00a3ca;
+}
+
+.number-answers {
+  color: #00a3ca;
+  font-weight: 600;
 }

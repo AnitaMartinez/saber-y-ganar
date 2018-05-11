@@ -15,7 +15,7 @@ const application = (function () {
     function init() {
         const buttonStartGame = document.getElementById("button-init-questions");
         const buttonSendQuestion = document.getElementById("button-send-question");
-        buttonStartGame.addEventListener("click", onStart); //mejor onStartGame
+        buttonStartGame.addEventListener("click", onStart);
         buttonSendQuestion.addEventListener("click", onNextQuestion);
         getQuestions(data => questionsWithAnswers = data);
     }
@@ -67,15 +67,12 @@ const application = (function () {
     }
 
     function onStart() {
-        //Nuevo añadido
-        const timerDom = document.getElementById("timer");
-        timerDom.classList.remove('hidden');
+        showTimer();
         showButtonNextQuestion();
         paintQuestion(currentQuestion());
+        updateQuestionIndex();
         startCountdown();
         prepareAnswersToBeClicked();
-
-        //reseteo el marcador
         updateScoreboard();
     }
 
@@ -101,18 +98,18 @@ const application = (function () {
                 saveInfoAnswerUser();
                 prepareStepsToPlayQuestion();
             }
-
         }
     }
 
     function prepareStepsToPlayQuestion() {
         clearCountDown();
         paintQuestion(currentQuestion());
+        updateQuestionIndex();
         startCountdown();
         prepareAnswersToBeClicked();
     }
 
-    function startCountdown() {
+    function startCountdown() { //callback ¿?
         timeCounter = setInterval(function () {
             onTimeChanged();
             onTimeOut();
@@ -120,8 +117,7 @@ const application = (function () {
     }
 
     function onTimeChanged() {
-        const timerDom = document.getElementById("timer");
-        timerDom.innerHTML = accumulatorTimeCounter.accumulator;
+        showTime();
         accumulatorTimeCounter.accumulator++;
     }
 
@@ -136,10 +132,18 @@ const application = (function () {
     }
 
     function clearCountDown() {
-        const timerDom = document.getElementById("timer");
         clearInterval(timeCounter);
-        accumulatorTimeCounter.accumulator = 0; //Esto es otra función que se llamaría resetCountDown o algo
-        timerDom.innerHTML = accumulatorTimeCounter.accumulator; //Esto va en otra función porque es pintar
+        resetAccumulatorCountdown();
+        showTime();
+    }
+
+    function resetAccumulatorCountdown() {
+        accumulatorTimeCounter.accumulator = 0;
+    }
+
+    function showTime() {
+        const timerDom = document.getElementById("timer");
+        timerDom.innerHTML = accumulatorTimeCounter.accumulator;
     }
 
     function paintQuestion(question) {
@@ -155,9 +159,12 @@ const application = (function () {
                 </div>`
             );
         }
-        questionsList.innerHTML = titleQuestion + "<div class='answers-content'>" + answersInputs + "</div>";
+        questionsList.innerHTML = titleQuestion + "<div class='container-answers'>" + answersInputs + "</div>";
         answersInputs = "";
-        ++currentQuestionIndex;  //refactor, porque esto no está pintando, pero llamarla aquí o tener cuidado con dónde la pongo
+    }
+
+    function updateQuestionIndex() {
+        ++currentQuestionIndex;
     }
 
     function currentQuestion() {
@@ -177,6 +184,11 @@ const application = (function () {
     function showButtonNextQuestion() {
         const buttonSendQuestion = document.getElementById("button-send-question");
         buttonSendQuestion.classList.remove('hidden');
+    }
+
+    function showTimer() {
+        const timerDom = document.getElementById("timer");
+        timerDom.classList.remove('hidden');
     }
 
     function areThereMoreQuestions() {

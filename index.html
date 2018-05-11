@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://fonts.googleapis.com/css?family=Gothic+A1:100,300,400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gothic+A1:100,300,600" rel="stylesheet">
     <link rel="stylesheet" href="style/style.css">
     <title>Saber y ganar</title>
 </head>
@@ -19,8 +19,8 @@
         <main>
 
             <div>
-                <div id="questions-list">
-                    <button id="button-init-questions">Comenzar</button>
+                <div id="questions-list" class="container-questions">
+                    <button id="button-init-questions" class="button-start">Comenzar</button>
                 </div>
                 <button class="hidden" id="button-send-question">Enviar pregunta</button>
             </div>
@@ -28,17 +28,15 @@
             <div>
                 <p id="timer"></p>
             </div>
-
-            <hr>
         </main>
         <section>
-            <h3>Marcador</h3>
-            <p>Total puntos:
-                <span id="total-points"></span>
+            <h3 class="title-md">Marcador</h3>
+            <p class="points">
+                <span id="total-points" class="total-points">?</span> puntos
             </p>
             <p>Has acertado
-                <span id="correct-answers"></span> de
-                <span id="total-answers"> </span> preguntas.
+                <span id="correct-answers" class="number-answers">?</span> de
+                <span id="total-answers" class="number-answers">?</span> preguntas.
             </p>
         </section>
 
