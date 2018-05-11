@@ -15,7 +15,7 @@ const application = (function () {
     function start() {
         const buttonStartGame = document.getElementById("button-init-questions");
         const buttonSendQuestion = document.getElementById("button-send-question");
-        buttonStartGame.addEventListener("click", initGame);
+        buttonStartGame.addEventListener("click", initGame); //mejor onStartGame
         buttonSendQuestion.addEventListener("click", onNextQuestion);
         getQuestions(data => questionsWithAnswers = data);
     }
@@ -73,39 +73,33 @@ const application = (function () {
         prepareAnswersToBeClicked();
     }
 
+    //Sacar los condicionales en una función que se llame loadNextQuestion 
     function onNextQuestion() {
         if (areThereMoreQuestions() === false) {
-            clearCountDown();
             saveInfoAnswerUser();
             console.log("Fin del juego");
-            paintScoreboard();
+            updateScoreboard();
+            if (isTimeOut()) {
+                clearCountDown();
+            }
+            //reset questions
             return;
         }
         //Esta lógica está mal expresada, lo del else, podría pasar de lo del si hay más preguntas en los dos del else, ya que tengo un return arriba
         if (areThereMoreQuestions() && isAnyAnswerChecked()) {
             saveInfoAnswerUser();
             prepareStepsToPlayQuestion();
-
         } else {
-            if (isAnyAnswerChecked() === false && isCountdownRunOut()) {
+            if (isAnyAnswerChecked() === false && isTimeOut()) {
                 markAnswerAsNotAnswered();
                 saveInfoAnswerUser();
                 prepareStepsToPlayQuestion();
 
-            } else if (isAnyAnswerChecked() === false && isCountdownRunOut() === false) {
+            } else if (isAnyAnswerChecked() === false && isTimeOut() === false) {
                 forceUserToAnswer();
             }
         }
     }
-
-    function isCountdownRunOut() {
-        return accumulatorTimeCounter.accumulator > maximumTimeCounter;
-    }
-
-    function markAnswerAsNotAnswered() {
-        answerUserId = null;
-    }
-
 
     function prepareStepsToPlayQuestion() {
         clearCountDown();
@@ -115,43 +109,36 @@ const application = (function () {
     }
 
     function startCountdown() {
-        const timerDom = document.getElementById("timer");
         timeCounter = setInterval(function () {
-            timerDom.innerHTML = accumulatorTimeCounter.accumulator;  //Esto va en otra función porque es pintar
-            accumulatorTimeCounter.accumulator++;
-            if (accumulatorTimeCounter.accumulator > maximumTimeCounter) { //Esto ya es otra funcionalidad
-                onNextQuestion();
-            }
+            onTimeChanged();
+            onTimeOut();
         }, 1000);
+    }
+
+    function onTimeChanged() {
+        const timerDom = document.getElementById("timer");
+        timerDom.innerHTML = accumulatorTimeCounter.accumulator;
+        accumulatorTimeCounter.accumulator++;
+    }
+
+    function onTimeOut() {
+        if (isTimeOut()) {
+            onNextQuestion();
+        }
+    }
+
+    function isTimeOut() {
+        return accumulatorTimeCounter.accumulator > maximumTimeCounter;
     }
 
     function clearCountDown() {
         const timerDom = document.getElementById("timer");
         clearInterval(timeCounter);
-        accumulatorTimeCounter.accumulator = 0;
+        accumulatorTimeCounter.accumulator = 0; //Esto es otra función que se llamaría resetCountDown o algo
         timerDom.innerHTML = accumulatorTimeCounter.accumulator; //Esto va en otra función porque es pintar
     }
 
-    function areThereMoreQuestions() {
-        return currentQuestionIndex < (questionsWithAnswers.length);
-    }
-
-    function isAnyAnswerChecked() {
-        const inputsRadio = document.getElementsByClassName('input-radio');
-        for (let i = 0; i < inputsRadio.length; i++) {
-            if (inputsRadio[i].checked === true) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function currentQuestion() {
-        return questionsWithAnswers[currentQuestionIndex];
-    }
-
     function paintQuestion(question) {
-        console.log("Al principio de paint: currentQuestionIndex: ", currentQuestionIndex);
         const questionsList = document.getElementById("questions-list");
         let titleQuestion;
         let answersInputs = "";
@@ -169,9 +156,45 @@ const application = (function () {
         ++currentQuestionIndex;  //refactor, porque esto no está pintando, pero llamarla aquí o tener cuidado con dónde la pongo
     }
 
+    function currentQuestion() {
+        return questionsWithAnswers[currentQuestionIndex];
+    }
+
+    function saveInfoAnswerUser() {
+        answersUser.push({
+            idQuestion: currentIdQuestion,
+            idAnswer: answerUserId,
+            isCorrect: isAnswerCorrect(),
+            time: accumulatorTimeCounter.accumulator
+        });
+        console.log(answersUser);
+    }
+
     function showButtonNextQuestion() {
         const buttonSendQuestion = document.getElementById("button-send-question");
         buttonSendQuestion.classList.remove('hidden');
+    }
+
+    function areThereMoreQuestions() {
+        return currentQuestionIndex < questionsWithAnswers.length;
+    }
+
+    function isAnyAnswerChecked() {
+        const inputsRadio = document.getElementsByClassName('input-radio');
+        for (let i = 0; i < inputsRadio.length; i++) {
+            if (inputsRadio[i].checked === true) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function markAnswerAsNotAnswered() {
+        answerUserId = null;
+    }
+
+    function forceUserToAnswer() {
+        alert("Elige una respuesta antes de pasar a la siguiente");
     }
 
     function prepareAnswersToBeClicked() {
@@ -191,7 +214,6 @@ const application = (function () {
         answerUserId = parseInt(event.currentTarget.value);
     }
 
-
     function checkAnswerSelected() {
         unCheckAnswers();
         checkCurrentAnswer();
@@ -208,15 +230,8 @@ const application = (function () {
         event.currentTarget.setAttribute("checked", "");
     }
 
-    function saveInfoAnswerUser() {
-        answersUser.push({
-            idQuestion: currentIdQuestion,
-            idAnswer: answerUserId,
-            isCorrect: isAnswerCorrect(),
-            time: accumulatorTimeCounter.accumulator
-        });
-        console.log(answersUser);
-    }
+
+
 
     function isAnswerCorrect() {
         if (answerUserId === null) {
@@ -233,8 +248,25 @@ const application = (function () {
         }
     }
 
-    function forceUserToAnswer() {
-        alert("Elige una respuesta antes de pasar a la siguiente");
+    function updateScoreboard() {
+        paintTotalPoints(calculatePoints());
+        paintCorrectAnswers();
+        paintTotalAnswers();
+    }
+
+    function paintTotalPoints(points) {
+        const txtTotalPoints = document.getElementById("total-points");
+        txtTotalPoints.innerText = points;
+    }
+
+    function paintTotalAnswers() {
+        const txtTotalAnswers = document.getElementById("total-answers");
+        txtTotalAnswers.innerText = answersUser.length;
+    }
+
+    function paintCorrectAnswers() {
+        const text = document.getElementById("correct-answers");
+        text.innerText = calculateNumberOfCorrectAnswers();
     }
 
     function calculatePoints() {
@@ -260,27 +292,6 @@ const application = (function () {
             }
         }
         return points;
-    }
-
-    function paintScoreboard() {
-        paintTotalPoints();
-        paintCorrectAnswers();
-        paintTotalAnswers();
-    }
-
-    function paintTotalPoints() {
-        const txtTotalPoints = document.getElementById("total-points");
-        txtTotalPoints.innerText = calculatePoints();
-    }
-
-    function paintTotalAnswers() {
-        const txtTotalAnswers = document.getElementById("total-answers");
-        txtTotalAnswers.innerText = answersUser.length;
-    }
-
-    function paintCorrectAnswers() {
-        const text = document.getElementById("correct-answers");
-        text.innerText = calculateNumberOfCorrectAnswers();
     }
 
     function calculateNumberOfCorrectAnswers() {
