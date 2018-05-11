@@ -15,7 +15,7 @@ const application = (function () {
     function start() {
         const buttonStartGame = document.getElementById("button-init-questions");
         const buttonSendQuestion = document.getElementById("button-send-question");
-        buttonStartGame.addEventListener("click", initGame); //mejor onStartGame
+        buttonStartGame.addEventListener("click", onStart); //mejor onStartGame
         buttonSendQuestion.addEventListener("click", onNextQuestion);
         getQuestions(data => questionsWithAnswers = data);
     }
@@ -66,38 +66,54 @@ const application = (function () {
         callback(serverData);
     }
 
-    function initGame() {
+    function onStart() {
+        //Nuevo añadido
+        const timerDom = document.getElementById("timer");
+        timerDom.classList.remove('hidden');
         showButtonNextQuestion();
         paintQuestion(currentQuestion());
         startCountdown();
         prepareAnswersToBeClicked();
     }
 
-    //Sacar los condicionales en una función que se llame loadNextQuestion 
     function onNextQuestion() {
         if (areThereMoreQuestions() === false) {
             saveInfoAnswerUser();
-            console.log("Fin del juego");
             updateScoreboard();
-            if (isTimeOut()) {
+            if (isTimeOut() || isAnyAnswerChecked()) {
                 clearCountDown();
+                const questionsList = document.getElementById("questions-list");
+                questionsList.innerHTML = "<button id='button-init-questions'>Comenzar</button>";
+
+                const buttonSendQuestion = document.getElementById("button-send-question");
+                buttonSendQuestion.classList.add('hidden');
+
+                const timerDom = document.getElementById("timer");
+                timerDom.classList.add('hidden');
+
+                currentQuestionIndex = 0;
+                questionsWithAnswers.length = 0; //Pongo las preguntas a 0
+                answersUser.length = 0; //Pongo los datos de las respuesas del usuario a 0
+                console.log(questionsWithAnswers);
+
+                start();
+
             }
-            //reset questions
             return;
         }
-        //Esta lógica está mal expresada, lo del else, podría pasar de lo del si hay más preguntas en los dos del else, ya que tengo un return arriba
-        if (areThereMoreQuestions() && isAnyAnswerChecked()) {
+        if (isAnyAnswerChecked()) {
             saveInfoAnswerUser();
             prepareStepsToPlayQuestion();
         } else {
-            if (isAnyAnswerChecked() === false && isTimeOut()) {
+            if (isTimeOut() === false) {
+                forceUserToAnswer();
+            }
+            if (isTimeOut()) {
                 markAnswerAsNotAnswered();
                 saveInfoAnswerUser();
                 prepareStepsToPlayQuestion();
-
-            } else if (isAnyAnswerChecked() === false && isTimeOut() === false) {
-                forceUserToAnswer();
             }
+
         }
     }
 
