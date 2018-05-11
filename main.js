@@ -74,27 +74,9 @@ const application = (function () {
         paintQuestion(currentQuestion());
         startCountdown();
         prepareAnswersToBeClicked();
-    }
 
-    function resetGame() {
-        clearCountDown();
-        resetDOM();
-        resetQuestionsAndAnswers();
-    }
-
-    function resetDOM() {
-        const questionsList = document.getElementById("questions-list");
-        const buttonSendQuestion = document.getElementById("button-send-question");
-        const timerDom = document.getElementById("timer");
-        questionsList.innerHTML = "<button id='button-init-questions'>Comenzar</button>";
-        buttonSendQuestion.classList.add('hidden');
-        timerDom.classList.add('hidden');
-    }
-
-    function resetQuestionsAndAnswers() {
-        currentQuestionIndex = 0;
-        questionsWithAnswers.length = 0;
-        answersUser.length = 0;
+        //reseteo el marcador
+        updateScoreboard();
     }
 
     function onNextQuestion() {
@@ -252,9 +234,6 @@ const application = (function () {
         event.currentTarget.setAttribute("checked", "");
     }
 
-
-
-
     function isAnswerCorrect() {
         if (answerUserId === null) {
             console.log("Has fallado, puesto que no has contestado y se ha pasado el tiempo");
@@ -324,6 +303,27 @@ const application = (function () {
             }
         }
         return accumulatorAnswers;
+    }
+
+    function resetGame() {
+        clearCountDown();
+        resetDOM();
+        resetQuestionsAndAnswers();
+    }
+
+    function resetDOM() {
+        const questionsList = document.getElementById("questions-list");
+        const buttonSendQuestion = document.getElementById("button-send-question");
+        const timerDom = document.getElementById("timer");
+        questionsList.innerHTML = "<button id='button-init-questions'>Comenzar</button>";
+        buttonSendQuestion.classList.add('hidden');
+        timerDom.classList.add('hidden');
+    }
+
+    function resetQuestionsAndAnswers() {
+        currentQuestionIndex = 0;
+        questionsWithAnswers.length = 0;
+        answersUser.length = 0;
     }
 
     return {
