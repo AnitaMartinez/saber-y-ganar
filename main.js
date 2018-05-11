@@ -12,7 +12,7 @@ const application = (function () {
     };
     const maximumTimeCounter = 5;
 
-    function start() {
+    function init() {
         const buttonStartGame = document.getElementById("button-init-questions");
         const buttonSendQuestion = document.getElementById("button-send-question");
         buttonStartGame.addEventListener("click", onStart); //mejor onStartGame
@@ -76,28 +76,34 @@ const application = (function () {
         prepareAnswersToBeClicked();
     }
 
+    function resetGame() {
+        clearCountDown();
+        resetDOM();
+        resetQuestionsAndAnswers();
+    }
+
+    function resetDOM() {
+        const questionsList = document.getElementById("questions-list");
+        const buttonSendQuestion = document.getElementById("button-send-question");
+        const timerDom = document.getElementById("timer");
+        questionsList.innerHTML = "<button id='button-init-questions'>Comenzar</button>";
+        buttonSendQuestion.classList.add('hidden');
+        timerDom.classList.add('hidden');
+    }
+
+    function resetQuestionsAndAnswers() {
+        currentQuestionIndex = 0;
+        questionsWithAnswers.length = 0;
+        answersUser.length = 0;
+    }
+
     function onNextQuestion() {
         if (areThereMoreQuestions() === false) {
             saveInfoAnswerUser();
             updateScoreboard();
             if (isTimeOut() || isAnyAnswerChecked()) {
-                clearCountDown();
-                const questionsList = document.getElementById("questions-list");
-                questionsList.innerHTML = "<button id='button-init-questions'>Comenzar</button>";
-
-                const buttonSendQuestion = document.getElementById("button-send-question");
-                buttonSendQuestion.classList.add('hidden');
-
-                const timerDom = document.getElementById("timer");
-                timerDom.classList.add('hidden');
-
-                currentQuestionIndex = 0;
-                questionsWithAnswers.length = 0; //Pongo las preguntas a 0
-                answersUser.length = 0; //Pongo los datos de las respuesas del usuario a 0
-                console.log(questionsWithAnswers);
-
-                start();
-
+                resetGame();
+                init();
             }
             return;
         }
@@ -299,11 +305,11 @@ const application = (function () {
             }
             if (answersUser[i].isCorrect === false) {
                 if (answersUser[i].time > 20) {
-                    points -= 3;
-                } else if (answersUser[i].time > 10) {
                     points -= 2;
-                } else {
+                } else if (answersUser[i].time > 10) {
                     points -= 1;
+                } else {
+                    points -= 3;
                 }
             }
         }
@@ -321,7 +327,7 @@ const application = (function () {
     }
 
     return {
-        start: start
+        start: init
     };
 
 }());
