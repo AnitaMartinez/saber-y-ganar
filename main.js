@@ -76,23 +76,38 @@ const application = (function () {
         updateScoreboard();
     }
 
+
     function onNextQuestion() {
         if (!areThereMoreQuestions()) {
-            saveInfoAnswerUser();
-            updateScoreboard();
-            if (isTimeOut() || isAnyAnswerChecked()) {  //Está mal cuando es countdown
-                resetGame();
-                init();
+
+            if (isAnyAnswerChecked()) {
+                saveInfoAnswerUser();
             }
+            else {
+                if (isTimeOut()) {
+                    markAnswerAsNotAnswered();
+                    saveInfoAnswerUser();
+                }
+                else {
+                    forceUserToAnswer();
+                }
+            }
+            updateScoreboard();
+            clearCountDown();
+
+            // resetGame();
+            // init();
         }
         else if (isAnyAnswerChecked()) {
             saveInfoAnswerUser();
-            prepareStepsToPlayQuestion();
+            updateScoreboard();
+            prepareStepsToPlayQuestion();  //Es esto lo único que cambia
         }
         else {
             if (isTimeOut()) {
                 markAnswerAsNotAnswered();
                 saveInfoAnswerUser();
+                updateScoreboard();
                 prepareStepsToPlayQuestion();
             }
             else {
