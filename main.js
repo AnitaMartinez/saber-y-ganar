@@ -10,7 +10,7 @@ const application = (function () {
     const accumulatorTimeCounter = {
         accumulator: 0
     };
-    const maximumTimeCounter = 5;
+    const maximumTimeCounter = 8;
 
     function init() {
         const buttonStartGame = document.getElementById("button-init-questions");
@@ -212,34 +212,13 @@ const application = (function () {
     function prepareAnswersToBeClicked() {
         const inputsRadio = document.getElementsByClassName('input-radio');
         for (let i = 0; i < inputsRadio.length; i++) {
-            inputsRadio[i].addEventListener("click", handleClickInAnswers);
+            inputsRadio[i].addEventListener("click", getInfoAnswerUser);
         }
     }
 
-    function handleClickInAnswers(event) {
-        checkAnswerSelected(event);
-        getInfoAnswerUser();
-    }
-
-    function getInfoAnswerUser() {
+    function getInfoAnswerUser(event) {
         currentIdQuestion = parseInt(event.currentTarget.dataset.idquestion);
         answerUserId = parseInt(event.currentTarget.value);
-    }
-
-    function checkAnswerSelected() {
-        unCheckAnswers();
-        checkCurrentAnswer();
-    }
-
-    function unCheckAnswers() {
-        const inputsRadio = document.getElementsByClassName('input-radio');
-        for (let i = 0; i < inputsRadio.length; i++) {
-            inputsRadio[i].removeAttribute("checked");
-        }
-    }
-
-    function checkCurrentAnswer() {
-        event.currentTarget.setAttribute("checked", "");
     }
 
     function isAnswerCorrect() {
@@ -328,7 +307,7 @@ const application = (function () {
         buttonSendQuestion.classList.add('hidden');
     }
 
-    function resetQuestionsAndAnswers() { //Refactor y comprobar que funciona
+    function resetQuestionsAndAnswers() { //Refactor 
         currentQuestionIndex = 0;
         questionsWithAnswers.length = 0;
         answersUser.length = 0;
