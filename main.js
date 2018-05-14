@@ -77,27 +77,28 @@ const application = (function () {
     }
 
     function onNextQuestion() {
-        if (areThereMoreQuestions() === false) {
+        if (!areThereMoreQuestions()) {
             saveInfoAnswerUser();
             updateScoreboard();
             if (isTimeOut() || isAnyAnswerChecked()) {
                 resetGame();
                 init();
             }
-            return;
         }
-        if (isAnyAnswerChecked()) {
+        else if (isAnyAnswerChecked()) {
             saveInfoAnswerUser();
             prepareStepsToPlayQuestion();
         } else {
-            if (isTimeOut() === false) {
+            if (!isTimeOut()) {
                 forceUserToAnswer();
             }
-            if (isTimeOut()) {
+            else {
                 markAnswerAsNotAnswered();
                 saveInfoAnswerUser();
                 prepareStepsToPlayQuestion();
             }
+
+
         }
     }
 
