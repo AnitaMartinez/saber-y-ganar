@@ -76,45 +76,26 @@ const application = (function () {
         updateScoreboard();
     }
 
-
     function onNextQuestion() {
-        if (!areThereMoreQuestions()) {
-
-            if (isAnyAnswerChecked()) {
-                saveInfoAnswerUser();
-            }
-            else {
-                if (isTimeOut()) {
-                    markAnswerAsNotAnswered();
-                    saveInfoAnswerUser();
-                }
-                else {
-                    forceUserToAnswer();
-                }
-            }
-            updateScoreboard();
-            clearCountDown();
-
-            // resetGame();
-            // init();
+        if (!isAnyAnswerChecked() && !isTimeOut()) {
+            forceUserToAnswer();
+            return;
         }
-        else if (isAnyAnswerChecked()) {
-            saveInfoAnswerUser();
-            updateScoreboard();
-            prepareStepsToPlayQuestion();  //Es esto lo único que cambia
+
+        if (!isAnyAnswerChecked() && isTimeOut()) {
+            markAnswerAsNotAnswered();
+        }
+        if (areThereMoreQuestions()) {
+            prepareStepsToPlayQuestion();
         }
         else {
-            if (isTimeOut()) {
-                markAnswerAsNotAnswered();
-                saveInfoAnswerUser();
-                updateScoreboard();
-                prepareStepsToPlayQuestion();
-            }
-            else {
-                forceUserToAnswer();
-            }
+            resetGame();
+            init();
         }
+        saveInfoAnswerUser();
+        updateScoreboard();
     }
+
 
     function prepareStepsToPlayQuestion() {
         clearCountDown();
@@ -340,14 +321,14 @@ const application = (function () {
 
     function resetDOM() {
         const questionsList = document.getElementById("questions-list");
-        const buttonSendQuestion = document.getElementById("button-send-question");
+        questionsList.innerHTML = "<button id='button-init-questions'>Volver a jugar</button>";
         const timerDom = document.getElementById("timer");
-        questionsList.innerHTML = "<button id='button-init-questions'>Comenzar</button>";
-        buttonSendQuestion.classList.add('hidden');
         timerDom.classList.add('hidden');
+        const buttonSendQuestion = document.getElementById("button-send-question");
+        buttonSendQuestion.classList.add('hidden');
     }
 
-    function resetQuestionsAndAnswers() {
+    function resetQuestionsAndAnswers() { //Refactor y comprobar que funciona
         currentQuestionIndex = 0;
         questionsWithAnswers.length = 0;
         answersUser.length = 0;
