@@ -80,7 +80,7 @@ const application = (function () {
         if (!areThereMoreQuestions()) {
             saveInfoAnswerUser();
             updateScoreboard();
-            if (isTimeOut() || isAnyAnswerChecked()) {
+            if (isTimeOut() || isAnyAnswerChecked()) {  //Está mal cuando es countdown
                 resetGame();
                 init();
             }
@@ -88,17 +88,16 @@ const application = (function () {
         else if (isAnyAnswerChecked()) {
             saveInfoAnswerUser();
             prepareStepsToPlayQuestion();
-        } else {
-            if (!isTimeOut()) {
-                forceUserToAnswer();
-            }
-            else {
+        }
+        else {
+            if (isTimeOut()) {
                 markAnswerAsNotAnswered();
                 saveInfoAnswerUser();
                 prepareStepsToPlayQuestion();
             }
-
-
+            else {
+                forceUserToAnswer();
+            }
         }
     }
 
@@ -296,12 +295,12 @@ const application = (function () {
                 }
             }
             if (answersUser[i].isCorrect === false) {
-                if (answersUser[i].time > 20) {
-                    points -= 2;
-                } else if (answersUser[i].time > 10) {
-                    points -= 1;
-                } else {
+                if (answersUser[i].time > maximumTimeCounter) {
                     points -= 3;
+                } else if (answersUser[i].time > 10) {
+                    points -= 2;
+                } else {
+                    points -= 1;
                 }
             }
         }
