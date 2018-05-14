@@ -96,7 +96,6 @@ const application = (function () {
         updateScoreboard();
     }
 
-
     function prepareStepsToPlayQuestion() {
         clearCountDown();
         paintQuestion(currentQuestion());
@@ -225,14 +224,13 @@ const application = (function () {
         if (answerUserId === null) {
             console.log("Has fallado, puesto que no has contestado y se ha pasado el tiempo");
             return false;
+        }
+        else if (answerUserId === questionsWithAnswers[currentIdQuestion].correctAnswerId) {
+            console.log("Has acertado");
+            return true;
         } else {
-            if (answerUserId === questionsWithAnswers[currentIdQuestion].correctAnswerId) {
-                console.log("Has acertado");
-                return true;
-            } else {
-                console.log("Has fallado");
-                return false;
-            }
+            console.log("Has fallado");
+            return false;
         }
     }
 
