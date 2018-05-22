@@ -77,11 +77,6 @@ const application = (function () {
         updateScoreboard();
     }
 
-    function resetQuestionsAndAnswers() { //Refactor 
-        currentQuestionIndex = 0;
-        answersUser.length = 0;
-    }
-
     function onNextQuestion() {
         if (!isAnyAnswerChecked() && !isTimeOut()) {
             forceUserToAnswer();
@@ -304,10 +299,14 @@ const application = (function () {
         return accumulatorAnswers;
     }
 
+    function resetQuestionsAndAnswers() {
+        currentQuestionIndex = 0;
+        answersUser.length = 0;
+    }
+
     function resetGame() {
         clearCountDown();
         resetDOM();
-        // resetQuestionsAndAnswers();
     }
 
     function resetDOM() {
