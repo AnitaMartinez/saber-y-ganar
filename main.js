@@ -67,6 +67,7 @@ const application = (function () {
     }
 
     function onStart() {
+        resetQuestionsAndAnswers();
         showTimer();
         showButtonNextQuestion();
         paintQuestion(currentQuestion());
@@ -74,6 +75,11 @@ const application = (function () {
         startCountdown();
         prepareAnswersToBeClicked();
         updateScoreboard();
+    }
+
+    function resetQuestionsAndAnswers() { //Refactor 
+        currentQuestionIndex = 0;
+        answersUser.length = 0;
     }
 
     function onNextQuestion() {
@@ -301,7 +307,7 @@ const application = (function () {
     function resetGame() {
         clearCountDown();
         resetDOM();
-        resetQuestionsAndAnswers();
+        // resetQuestionsAndAnswers();
     }
 
     function resetDOM() {
@@ -311,12 +317,6 @@ const application = (function () {
         timerDom.classList.add('hidden');
         const buttonSendQuestion = document.getElementById("button-send-question");
         buttonSendQuestion.classList.add('hidden');
-    }
-
-    function resetQuestionsAndAnswers() { //Refactor 
-        currentQuestionIndex = 0;
-        questionsWithAnswers.length = 0;
-        answersUser.length = 0;
     }
 
     return {
