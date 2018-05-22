@@ -10,7 +10,7 @@ const application = (function () {
     const accumulatorTimeCounter = {
         accumulator: 0
     };
-    const maximumTimeCounter = 8;
+    const maximumTimeCounter = 5;
 
     function init() {
         const buttonStartGame = document.getElementById("button-init-questions");
@@ -79,20 +79,21 @@ const application = (function () {
     function onNextQuestion() {
         if (!isAnyAnswerChecked() && !isTimeOut()) {
             forceUserToAnswer();
-            return;
+            return;  //claúsula guarda
         }
 
         if (!isAnyAnswerChecked() && isTimeOut()) {
             markAnswerAsNotAnswered();
         }
         if (areThereMoreQuestions()) {
+            saveInfoAnswerUser();
             prepareStepsToPlayQuestion();
         }
         else {
+            saveInfoAnswerUser();
             resetGame();
             init();
         }
-        saveInfoAnswerUser();
         updateScoreboard();
     }
 
@@ -259,20 +260,27 @@ const application = (function () {
         let points = 0;
         for (let i = 0; i < answersUser.length; i++) {
             if (answersUser[i].isCorrect) {
-                if (answersUser[i].time <= 2) {
-                    points += 2;
-                } else if (answersUser[i].time <= 10) {
+                if (answersUser[i].time > 10) {
+                    console.log("Correcta, más de 10 segundos");
                     points += 1;
-                } else if (answersUser[i].time > 10) {
-                    points += 0;
+                }
+                else if (answersUser[i].time < 3) {
+                    console.log("Correcta, en menos de 3 segundos");
+                    points += 3;
+                }
+                else {
+                    console.log("Correcta, entre 3 y 10 segundos");
+                    points += 2;
                 }
             }
             if (answersUser[i].isCorrect === false) {
                 if (answersUser[i].time > maximumTimeCounter) {
                     points -= 3;
-                } else if (answersUser[i].time > 10) {
+                }
+                else if (answersUser[i].time > 10) {
                     points -= 2;
-                } else {
+                }
+                else {
                     points -= 1;
                 }
             }
