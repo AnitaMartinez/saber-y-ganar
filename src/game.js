@@ -20,51 +20,6 @@ export default function createGame(client){
       })
   }
 
-  function getQuestions(callback) {
-      var serverData = [
-          {
-              id: 0,
-              questionText: "¿Cuál es la capital de Portugal?",
-              answers: [
-                  { id: 1, answerText: "Faro", idQuestion: 0 },
-                  { id: 2, answerText: "Oporto", idQuestion: 0 },
-                  { id: 3, answerText: "Lisboa", idQuestion: 0 }
-              ],
-              correctAnswerId: 3
-          },
-          {
-              id: 1,
-              questionText: "¿Cuál es la capital de Egipto?",
-              answers: [
-                  { id: 1, answerText: "Faro", idQuestion: 1 },
-                  { id: 2, answerText: "El Cairo", idQuestion: 1 },
-                  { id: 3, answerText: "Lisboa", idQuestion: 1 }
-              ],
-              correctAnswerId: 2
-          },
-          {
-              id: 2,
-              questionText: "¿Cuál es la capital de España?",
-              answers: [
-                  { id: 1, answerText: "Madrid", idQuestion: 2 },
-                  { id: 2, answerText: "Oporto", idQuestion: 2 },
-                  { id: 3, answerText: "Lisboa", idQuestion: 2 }
-              ],
-              correctAnswerId: 1
-          },
-          {
-              id: 3,
-              questionText: "¿Cuál es la capital de Francia?",
-              answers: [
-                  { id: 1, answerText: "Madrid", idQuestion: 3 },
-                  { id: 2, answerText: "París", idQuestion: 3 },
-                  { id: 3, answerText: "Lisboa", idQuestion: 3 }
-              ],
-              correctAnswerId: 2
-          }
-      ];
-      callback(serverData);
-  }
 
   function onStart() {
       resetQuestionsAndAnswers();
