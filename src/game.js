@@ -15,8 +15,9 @@ export default function createGame(client){
       const buttonSendQuestion = document.getElementById("button-send-question");
       buttonStartGame.addEventListener("click", onStart);
       buttonSendQuestion.addEventListener("click", onNextQuestion);
-      client.getQuestions(function (questions) {
-        return questionsWithAnswers = questions;
+
+      client.getQuestions().then((questions) => {
+          questionsWithAnswers = JSON.parse(questions);
       })
   }
 
