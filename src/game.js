@@ -8,7 +8,7 @@ export default function createGame(client){
   const accumulatorTimeCounter = {
       accumulator: 0
   };
-  const maximumTimeCounter = 5;
+  const maximumTimeCounter = 12;
 
   function init() {
       const buttonStartGame = document.getElementById("button-init-questions");
