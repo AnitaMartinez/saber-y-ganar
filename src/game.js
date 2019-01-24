@@ -3,7 +3,7 @@ export default function createGame(client){
   let currentQuestionIndex = 0;
   let answerUserId;
   let currentIdQuestion;
-  const answersUser = [];
+  let answersUser = [];
   let timeCounter;
   const accumulatorTimeCounter = {
       accumulator: 0
@@ -131,7 +131,7 @@ export default function createGame(client){
           isCorrect: isAnswerCorrect(),
           time: accumulatorTimeCounter.accumulator
       });
-      console.log(answersUser);
+      //console.log(answersUser);
   }
 
   function showButtonNextQuestion() {
@@ -213,6 +213,11 @@ export default function createGame(client){
       text.innerText = calculateNumberOfCorrectAnswers();
   }
 
+  //Just to do the test:
+  function setAnswersUser(answers){
+      answersUser = answers
+  }
+
   function calculatePoints() {
       let points = 0;
       for (let i = 0; i < answersUser.length; i++) {
@@ -275,6 +280,13 @@ export default function createGame(client){
   }
 
   return {
-      start: init
+      start: init,
+      setAnswersUser,
+      calculatePoints
   };
+}
+
+//just to do the tests
+if (typeof (module) != 'undefined') {
+    module.exports = createGame
 }

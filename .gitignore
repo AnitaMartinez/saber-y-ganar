@@ -2,4 +2,8 @@ node_modules
 
 .DS_Store
 
-.jshintrc
+jshintrc
+
+.idea/
+
+.idea/workspace.xml
