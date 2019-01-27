@@ -53,12 +53,12 @@ describe('calculate points', () => {
     });
 });
 
-// -- Integratio test --
+// -- Integration test --
 
 /*
-    - answers a question
+    - render questions
     - restart the counter time
-    - does not repeat the last question
+    - not repeat the last question
 */
 
 describe('checks DOM', () => {
@@ -140,13 +140,5 @@ describe('checks DOM', () => {
         expect(titleQuestion.innerHTML.trim()).toEqual(questions[1].questionText);
 
     })
-
-   /* La anterior no me sale. Los pasos necesarios serían:
-        - Click en el button start
-        - Click en una respuesta
-        - Click en el botón de pasar a la siguiente pregunta
-        - Comprobar que el title html de la pregunta sea el mismo que el del array de preguntas.
-        ¿Pero de dónde saco el array de preguntas? Necesitaría insertárselo por el test */
-
 });
 
