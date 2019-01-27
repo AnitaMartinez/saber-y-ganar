@@ -10,7 +10,7 @@ export default function createGame(client){
   };
   const maximumTimeCounter = 12;
 
-  function init() {
+  function init(callback) {
       const buttonStartGame = document.getElementById("button-init-questions");
       const buttonSendQuestion = document.getElementById("button-send-question");
       buttonStartGame.addEventListener("click", onStart);
@@ -18,6 +18,10 @@ export default function createGame(client){
 
       client.getQuestions().then((questions) => {
           questionsWithAnswers = JSON.parse(questions);
+          //To know when the promise is finished (now for the tests) :
+          if(typeof callback === 'function'){
+              callback();
+          }
       })
   }
 
