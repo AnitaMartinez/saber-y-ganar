@@ -11,10 +11,10 @@ export default function createGame(client){
   const maximumTimeCounter = 12;
 
   function init(callback) {
-      const buttonStartGame = document.getElementById("button-init-questions");
-      const buttonSendQuestion = document.getElementById("button-send-question");
-      buttonStartGame.addEventListener("click", onStart);
-      buttonSendQuestion.addEventListener("click", onNextQuestion);
+      const btnInit = document.getElementById("button-init-questions");
+      const btnSend = document.getElementById("button-send-question");
+      btnInit.addEventListener("click", onStart);
+      btnSend.addEventListener("click", onNextQuestion);
 
       client.getQuestions().then((questions) => {
           questionsWithAnswers = JSON.parse(questions);
@@ -25,11 +25,9 @@ export default function createGame(client){
       })
   }
 
-
   function onStart() {
       resetQuestionsAndAnswers();
-      showTimer();
-      showButtonNextQuestion();
+      showElementsDom();
       paintQuestion(currentQuestion());
       updateQuestionIndex();
       startCountdown();
@@ -40,7 +38,7 @@ export default function createGame(client){
   function onNextQuestion() {
       if (!isAnyAnswerChecked() && !isTimeOut()) {
           forceUserToAnswer();
-          return;  //claúsula guarda
+          return;
       }
 
       if (!isAnyAnswerChecked() && isTimeOut()) {
@@ -66,7 +64,7 @@ export default function createGame(client){
       prepareAnswersToBeClicked();
   }
 
-  function startCountdown() { //callback ¿?
+  function startCountdown() {
       timeCounter = setInterval(function () {
           onTimeChanged();
           onTimeOut();
@@ -90,12 +88,8 @@ export default function createGame(client){
 
   function clearCountDown() {
       clearInterval(timeCounter);
-      resetAccumulatorCountdown();
-      showTime();
-  }
-
-  function resetAccumulatorCountdown() {
       accumulatorTimeCounter.accumulator = 0;
+      showTime();
   }
 
   function showTime() {
@@ -135,17 +129,13 @@ export default function createGame(client){
           isCorrect: isAnswerCorrect(),
           time: accumulatorTimeCounter.accumulator
       });
-      //console.log(answersUser);
   }
 
-  function showButtonNextQuestion() {
-      const buttonSendQuestion = document.getElementById("button-send-question");
-      buttonSendQuestion.classList.remove('hidden');
-  }
-
-  function showTimer() {
+  function showElementsDom() {
       const timerDom = document.getElementById("timer");
+      const buttonSendQuestion = document.getElementById("button-send-question");
       timerDom.classList.remove('hidden');
+      buttonSendQuestion.classList.remove('hidden');
   }
 
   function areThereMoreQuestions() {
@@ -171,7 +161,7 @@ export default function createGame(client){
   }
 
   function prepareAnswersToBeClicked() {
-      const inputsRadio = document.getElementsByClassName('input-radio');
+      const inputsRadio = document.getElementsByClassName("input-radio");
       for (let i = 0; i < inputsRadio.length; i++) {
           inputsRadio[i].addEventListener("click", getInfoAnswerUser);
       }
@@ -227,15 +217,12 @@ export default function createGame(client){
       for (let i = 0; i < answersUser.length; i++) {
           if (answersUser[i].isCorrect) {
               if (answersUser[i].time > 10) {
-                  console.log("Correcta, más de 10 segundos");
                   points += 1;
               }
               else if (answersUser[i].time < 3) {
-                  console.log("Correcta, en menos de 3 segundos");
                   points += 3;
               }
               else {
-                  console.log("Correcta, entre 3 y 10 segundos");
                   points += 2;
               }
           }
@@ -290,7 +277,6 @@ export default function createGame(client){
   };
 }
 
-//just to do the tests
 if (typeof (module) != 'undefined') {
     module.exports = createGame
 }
