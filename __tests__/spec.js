@@ -1,8 +1,7 @@
 const pug = require('pug');
 const gameApp = require('../src/game');
 
-
-// -- Unit Tests --
+// -- Unit tests --
 
 describe('calculate points', () => {
 
@@ -53,13 +52,7 @@ describe('calculate points', () => {
     });
 });
 
-// -- Integration test --
-
-/*
-    - render questions
-    - restart the counter time
-    - not repeat the last question
-*/
+// -- Integration tests --
 
 describe('checks DOM', () => {
 
@@ -106,7 +99,17 @@ describe('checks DOM', () => {
         }
     ];
 
-    beforeEach((done) => {
+    let btnInit;
+    let btnSend;
+    let timer;
+
+    const getDomElements = () => {
+        btnInit = document.querySelector('#button-init-questions');
+        btnSend = document.querySelector('#button-send-question');
+        timer = document.querySelector('#timer');
+    };
+
+    beforeEach(done => {
         document.body.innerHTML = pug.compileFile('./views/index.pug', null)();
         const getQuestions = {
             getQuestions : () => {
@@ -116,29 +119,32 @@ describe('checks DOM', () => {
             }
         };
         gameApp(getQuestions).start(done);
+        getDomElements();
     });
 
     it('loads the page', () => {
-        expect(
-            document.getElementById('button-init-questions'))
-            .not.toBeNull();
-    });
-    it('expects first question to be rendered', () => {
-        const buttonStart = document.getElementById('button-init-questions');
-        buttonStart.click();
-        const questionTitle = document.getElementById('button-send-question');
-        expect(questionTitle).not.toBeNull();
+        expect(btnInit).not.toBeNull();
+        expect(btnSend).not.toBeNull();
+
     });
     it('answers a question and renders next question', () => {
-        const buttonStart = document.getElementById('button-init-questions');
-        buttonStart.click();
+        btnInit.click();
         const inputAnswer = document.querySelector('.input-radio');
         inputAnswer.click();
-        const questionTitle = document.getElementById('button-send-question');
-        questionTitle.click();
+        btnSend.click();
         const titleQuestion = document.querySelector('#questions-list h5');
         expect(titleQuestion.innerHTML.trim()).toEqual(questions[1].questionText);
+    });
+    it('restarts counter time', done => {
+        btnInit.click();
+        const inputAnswer = document.querySelector('.input-radio');
+        inputAnswer.click();
+        btnSend.click();
+        setTimeout(() => {
+            expect(Number(timer.innerHTML)).toEqual(0);
+            done();
+        }, 1000);
+    });
 
-    })
 });
 
